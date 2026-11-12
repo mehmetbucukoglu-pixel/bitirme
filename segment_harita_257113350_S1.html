@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_b87d6fa7d4b76c713cde79b066c0ae2b {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_b87d6fa7d4b76c713cde79b066c0ae2b" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_b87d6fa7d4b76c713cde79b066c0ae2b = L.map(
+                "map_b87d6fa7d4b76c713cde79b066c0ae2b",
+                {
+                    center: [40.80745968640905, 28.55827085349705],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 10,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_796e1d12a7e883c497e904634a0b735b = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Esri World Street Map",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_796e1d12a7e883c497e904634a0b735b.addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            var tile_layer_a72f644b034d8a247f4e0131c46ad32e = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "CartoDB Voyager",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_a72f644b034d8a247f4e0131c46ad32e.addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            var tile_layer_c8c360f50283ce6d1ed489f291f4e06d = L.tileLayer(
+                "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "Esri World Imagery",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_c8c360f50283ce6d1ed489f291f4e06d.addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            var layer_control_93c84d41084af3539efd1bc4af6f83b6_layers = {
+                base_layers : {
+                    "Esri Sokak / Deniz Haritas\u0131" : tile_layer_796e1d12a7e883c497e904634a0b735b,
+                    "CartoDB Renkli Harita" : tile_layer_a72f644b034d8a247f4e0131c46ad32e,
+                    "Esri Uydu G\u00f6r\u00fcnt\u00fcs\u00fc (Satellite)" : tile_layer_c8c360f50283ce6d1ed489f291f4e06d,
+                },
+                overlays :  {
+                },
+            };
+            let layer_control_93c84d41084af3539efd1bc4af6f83b6 = L.control.layers(
+                layer_control_93c84d41084af3539efd1bc4af6f83b6_layers.base_layers,
+                layer_control_93c84d41084af3539efd1bc4af6f83b6_layers.overlays,
+                {
+  "position": "topright",
+  "collapsed": true,
+  "autoZIndex": true,
+}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+
+        
+    
+            var circle_46949cab57d602eacb3b7eb9a3fb3b1f = L.circle(
+                [40.183333, 26.366667],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_46949cab57d602eacb3b7eb9a3fb3b1f.bindTooltip(
+                `<div>
+                     Liman: Eceabat (MRM-F001 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_b0fb4fedaa93fd2fa2d42badd70b9bc7 = L.circle(
+                [40.15, 26.4],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_b0fb4fedaa93fd2fa2d42badd70b9bc7.bindTooltip(
+                `<div>
+                     Liman: Çanakkale (MRM-F002 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_38048e2af2e3d72e21b5383c4ea6d389 = L.circle(
+                [40.4, 26.666667],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_38048e2af2e3d72e21b5383c4ea6d389.bindTooltip(
+                `<div>
+                     Liman: Gelibolu (MRM-F003 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_ddc5257f2dac179b38c1ace4e1e91df6 = L.circle(
+                [40.45, 27.133333],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_ddc5257f2dac179b38c1ace4e1e91df6.bindTooltip(
+                `<div>
+                     Liman: Biga–Değirmencik — İÇDAŞ-1 (MRM-F004 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_0866b70f936e37ebd648c9863af10e51 = L.circle(
+                [40.4, 27.316667],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_0866b70f936e37ebd648c9863af10e51.bindTooltip(
+                `<div>
+                     Liman: Karabiga (MRM-F005 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_f7d0955b6bc3420b89cd1718cdcc2b03 = L.circle(
+                [40.9, 27.466667],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_f7d0955b6bc3420b89cd1718cdcc2b03.bindTooltip(
+                `<div>
+                     Liman: Barbaros — Asyaport (MRM-F006 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_773fa216f7cfb466326e9f9ebad1d4f9 = L.circle(
+                [40.961944, 27.508333],
+                {"bubblingMouseEvents": true, "color": "#dc2626", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#dc2626", "fillOpacity": 0.4, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_773fa216f7cfb466326e9f9ebad1d4f9.bindTooltip(
+                `<div>
+                     VARIŞ LİMANI: Tekirdağ — Ceyport (MRM-F007 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_4d9e42aa8552e95d8f5461c549b3968a = L.circle(
+                [40.983333, 27.516667],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_4d9e42aa8552e95d8f5461c549b3968a.bindTooltip(
+                `<div>
+                     Liman: Tekirdağ — WPI (MRM-F008 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_e7cf69b35104a0f6d4e3ac38473ff6ee = L.circle(
+                [40.583333, 27.55],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_e7cf69b35104a0f6d4e3ac38473ff6ee.bindTooltip(
+                `<div>
+                     Liman: Marmara Adası (MRM-F009 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_63252e2bc00bd0626d9f02168484d62b = L.circle(
+                [40.383333, 27.8],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_63252e2bc00bd0626d9f02168484d62b.bindTooltip(
+                `<div>
+                     Liman: Erdek (MRM-F010 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_27f8b9afbf01a663c959aad6f3a15b67 = L.circle(
+                [40.954667, 27.926667],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_27f8b9afbf01a663c959aad6f3a15b67.bindTooltip(
+                `<div>
+                     Liman: Marmara Ereğlisi — Martaş (MRM-F011 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_0df462a5155f59f88a43fbf26710b64b = L.circle(
+                [40.3625, 27.963889],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_0df462a5155f59f88a43fbf26710b64b.bindTooltip(
+                `<div>
+                     Liman: Bandırma — Çelebi (MRM-F012 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_083a178d251809ddf9b3bc8753aa5183 = L.circle(
+                [40.35, 27.966667],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_083a178d251809ddf9b3bc8753aa5183.bindTooltip(
+                `<div>
+                     Liman: Bandırma — WPI (MRM-F013 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_031a2bb45c0f0e1e1769e9c9545dfae7 = L.circle(
+                [41.0, 27.983333],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_031a2bb45c0f0e1e1769e9c9545dfae7.bindTooltip(
+                `<div>
+                     Liman: Marmara Ereğlisi — BOTAŞ (MRM-F014 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_6de5f57d9d44ef6c1ccb777d19f53660 = L.circle(
+                [41.066667, 28.25],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_6de5f57d9d44ef6c1ccb777d19f53660.bindTooltip(
+                `<div>
+                     Liman: Silivri (MRM-F015 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_3f051cdb8448a2a06f9d5ebd4f00c3f4 = L.circle(
+                [40.963889, 28.673611],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_3f051cdb8448a2a06f9d5ebd4f00c3f4.bindTooltip(
+                `<div>
+                     Liman: Ambarlı — Marport (MRM-F016 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_411158e461282238cd620e6015edf0a2 = L.circle(
+                [40.966667, 28.7],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_411158e461282238cd620e6015edf0a2.bindTooltip(
+                `<div>
+                     Liman: Ambarlı — WPI (MRM-F017 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_77ac1516b4b6f2982d1395363ca5c3f9 = L.circle(
+                [40.383333, 28.883333],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_77ac1516b4b6f2982d1395363ca5c3f9.bindTooltip(
+                `<div>
+                     Liman: Mudanya (MRM-F018 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_da83355fbb9572bec961c7d5b4de3e32 = L.circle(
+                [40.98, 28.898333],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_da83355fbb9572bec961c7d5b4de3e32.bindTooltip(
+                `<div>
+                     Liman: Zeytinburnu — Zeyport (MRM-F019 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_86be8e45d222a7bf39fd71191e445a14 = L.circle(
+                [41.016667, 28.966667],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_86be8e45d222a7bf39fd71191e445a14.bindTooltip(
+                `<div>
+                     Liman: İstanbul (MRM-F020 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_c4e79a04cb6422ebffdf9e2b7a6fed6d = L.circle(
+                [41.0, 29.016667],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_c4e79a04cb6422ebffdf9e2b7a6fed6d.bindTooltip(
+                `<div>
+                     Liman: Haydarpaşa (İstanbul) (MRM-F021 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_f2bdc3af473e8c27588c289cb65644cb = L.circle(
+                [41.05, 29.033333],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_f2bdc3af473e8c27588c289cb65644cb.bindTooltip(
+                `<div>
+                     Liman: Defterdar Burnu (MRM-F022 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_6c6bb079052e4b05acabd191eb9915b1 = L.circle(
+                [41.116667, 29.05],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_6c6bb079052e4b05acabd191eb9915b1.bindTooltip(
+                `<div>
+                     Liman: İstinye (MRM-F023 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_b4a47e9d9d9cf61b7cbe6d931d0432ec = L.circle(
+                [40.416667, 29.1],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_b4a47e9d9d9cf61b7cbe6d931d0432ec.bindTooltip(
+                `<div>
+                     Liman: Borusan İskelesi (MRM-F024 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_4aa523528f7d8361e429b2ee5bbf61e3 = L.circle(
+                [40.416467, 29.111147],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_4aa523528f7d8361e429b2ee5bbf61e3.bindTooltip(
+                `<div>
+                     Liman: Gemlik — Gemport (MRM-F025 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_db16355df6697a2c607b9ef768d8df43 = L.circle(
+                [40.416667, 29.116667],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_db16355df6697a2c607b9ef768d8df43.bindTooltip(
+                `<div>
+                     Liman: Gemlik — WPI (MRM-F026 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_49ac55a888dc54a65b1393a734c95f76 = L.circle(
+                [40.833333, 29.25],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_49ac55a888dc54a65b1393a734c95f76.bindTooltip(
+                `<div>
+                     Liman: Tuzla (MRM-F027 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_b4539e2a03e249558107149fd7327f96 = L.circle(
+                [40.65, 29.266667],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_b4539e2a03e249558107149fd7327f96.bindTooltip(
+                `<div>
+                     Liman: Yalova (MRM-F028 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_753e06766bea1146fa428e337f2ca977 = L.circle(
+                [40.858333, 29.271944],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_753e06766bea1146fa428e337f2ca977.bindTooltip(
+                `<div>
+                     Liman: Pendik — DFDS (MRM-F029 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_6eb72bba85f2eccbef7dc39f2ac843b0 = L.circle(
+                [40.686111, 29.408333],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_6eb72bba85f2eccbef7dc39f2ac843b0.bindTooltip(
+                `<div>
+                     Liman: Taşköprü — Aksa Akrilik (MRM-F030 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_dd89144abb72a8a4c6f80a6d18cbedcb = L.circle(
+                [40.767711, 29.532506],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_dd89144abb72a8a4c6f80a6d18cbedcb.bindTooltip(
+                `<div>
+                     Liman: Dilovası — Yılport Gebze (MRM-F031 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_1ac026287b3e82d697a3703ff371c406 = L.circle(
+                [40.766667, 29.533333],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_1ac026287b3e82d697a3703ff371c406.bindTooltip(
+                `<div>
+                     Liman: Kaba Burnu (MRM-F032 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_8a1c8b6593221e219edaf99359449077 = L.circle(
+                [40.766667, 29.55],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_8a1c8b6593221e219edaf99359449077.bindTooltip(
+                `<div>
+                     Liman: Gebze (MRM-F033 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_250c18d0d56563823596792390692abe = L.circle(
+                [40.776389, 29.595833],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_250c18d0d56563823596792390692abe.bindTooltip(
+                `<div>
+                     Liman: Tavşancıl — Kroman (MRM-F034 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_3ae2d56c8bac0209f9f1cfdec25cf863 = L.circle(
+                [40.8, 29.7],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_3ae2d56c8bac0209f9f1cfdec25cf863.bindTooltip(
+                `<div>
+                     Liman: Yarımca (MRM-F035 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_a13071291275e95d2facd12ebbfe357d = L.circle(
+                [40.771111, 29.723056],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_a13071291275e95d2facd12ebbfe357d.bindTooltip(
+                `<div>
+                     Liman: Yarımca–Körfez — Yılport Körfez (MRM-F036 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_6e1bab69b429ab6896197d105599e33f = L.circle(
+                [40.733333, 29.816667],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_6e1bab69b429ab6896197d105599e33f.bindTooltip(
+                `<div>
+                     Liman: Gölcük Burnu (MRM-F037 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_1ea64e208517397a7397962b8929af3a = L.circle(
+                [40.75, 29.816667],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_1ea64e208517397a7397962b8929af3a.bindTooltip(
+                `<div>
+                     Liman: Derince Burnu (MRM-F038 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_b74e48e1f5bf43660d34db6e61042985 = L.circle(
+                [40.7504, 29.861417],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_b74e48e1f5bf43660d34db6e61042985.bindTooltip(
+                `<div>
+                     Liman: Derince — Koruma Klor (MRM-F039 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_763803b458c45ef59726dc89b81a3cd0 = L.circle(
+                [40.722778, 29.8775],
+                {"bubblingMouseEvents": true, "color": "#16a34a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#16a34a", "fillOpacity": 0.4, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_763803b458c45ef59726dc89b81a3cd0.bindTooltip(
+                `<div>
+                     KALKIŞ LİMANI: Başiskele–Sepetlipınar — Autoport (MRM-F040 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_3955c1bd948ccda055be4090aec69cad = L.circle(
+                [40.766667, 29.916667],
+                {"bubblingMouseEvents": true, "color": "#3b82f6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3b82f6", "fillOpacity": 0.15, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 500.0, "stroke": true, "weight": 2}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            circle_3955c1bd948ccda055be4090aec69cad.bindTooltip(
+                `<div>
+                     Liman: İzmit (MRM-F041 - R=500m)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var poly_line_47e8acd2ac882a5addbeb1f1bb7c5cac = L.polyline(
+                [[40.72534, 29.88243], [40.725515, 29.882355], [40.7257, 29.882240000000003], [40.72583833333333, 29.882136666666668], [40.72606333333333, 29.88201], [40.726285, 29.88188166666667], [40.72649666666666, 29.881731666666667], [40.726725, 29.881563333333336], [40.726996666666665, 29.881346666666666], [40.7272, 29.88118], [40.7275, 29.880925], [40.7278, 29.88069], [40.72812833333333, 29.880443333333336], [40.728465, 29.880178333333333], [40.72886833333334, 29.87992833333333], [40.72962, 29.879396666666665], [40.730030000000006, 29.87911833333333], [40.730426666666666, 29.878841666666663], [40.73086166666666, 29.878566666666664], [40.73125666666667, 29.878173333333333], [40.73159, 29.877773333333334], [40.731945, 29.877441666666662], [40.732328333333335, 29.87706166666667], [40.73269666666666, 29.87663333333333], [40.733131666666665, 29.87616833333333], [40.73383666666666, 29.875271666666663], [40.73421333333333, 29.87488], [40.734625, 29.874458333333333], [40.73544666666666, 29.873503333333336], [40.735835, 29.873015], [40.73654, 29.871963333333333], [40.73683833333334, 29.871485], [40.73716666666667, 29.87093666666667], [40.738163333333326, 29.869208333333333], [40.73872333333334, 29.868111666666668], [40.73899666666667, 29.867528333333333], [40.739295, 29.866898333333328], [40.73951833333333, 29.866335], [40.73972333333334, 29.8657], [40.73992833333333, 29.86499333333333], [40.74010333333333, 29.86440333333333], [40.74027333333333, 29.863746666666668], [40.740453333333335, 29.86301333333333], [40.74058, 29.862401666666663], [40.74071166666667, 29.861708333333336], [40.740856666666666, 29.86094333333333], [40.740983333333325, 29.860290000000003], [40.7413, 29.858766666666668], [40.74158, 29.857411666666668], [40.741661666666666, 29.856745], [40.74180166666667, 29.85598666666667], [40.74211, 29.853763333333333], [40.74216666666667, 29.853025], [40.74224166666667, 29.85144], [40.742275, 29.85068833333333], [40.74230833333333, 29.849991666666664], [40.74233166666667, 29.84922333333333], [40.74234166666666, 29.848455], [40.74234166666666, 29.846823333333337], [40.74232666666667, 29.846075], [40.742325, 29.844635], [40.74235333333333, 29.84384333333333], [40.7423, 29.843075], [40.74228166666667, 29.84222], [40.7423, 29.841438333333333], [40.742355, 29.840041666666664], [40.74239166666667, 29.839186666666667], [40.74244, 29.837536666666665], [40.742465, 29.836748333333333], [40.74252333333333, 29.834471666666666], [40.74257, 29.832815], [40.742626666666666, 29.830601666666663], [40.74261333333333, 29.829746666666665], [40.74260666666667, 29.828961666666665], [40.74262833333333, 29.828158333333327], [40.7425, 29.825085], [40.74243, 29.824175], [40.742365, 29.823476666666668], [40.74211, 29.821068333333336], [40.74204833333333, 29.82043666666667], [40.74196, 29.819485], [40.741905, 29.81877666666667], [40.74153666666666, 29.815763333333333], [40.74137666666666, 29.81481833333333], [40.74124833333334, 29.814116666666667], [40.741105, 29.813381666666665], [40.740925, 29.81259333333333], [40.74063, 29.811181666666663], [40.74046, 29.81035333333333], [40.74032666666666, 29.809673333333333], [40.74005833333333, 29.808131666666668], [40.739893333333335, 29.807315000000003], [40.739745, 29.806653333333333], [40.739556666666665, 29.80584], [40.739385, 29.805186666666668], [40.738985, 29.803656666666665], [40.73861166666666, 29.80228], [40.738393333333335, 29.80146333333333], [40.73822333333333, 29.800801666666665], [40.73781333333333, 29.79926833333333], [40.737448333333326, 29.79787], [40.73725666666667, 29.79705], [40.737078333333336, 29.79630833333333], [40.736528333333325, 29.79410333333333], [40.73636833333333, 29.793436666666665], [40.736178333333335, 29.79262], [40.73601, 29.79186], [40.735866666666666, 29.79119166666667], [40.735753333333335, 29.79042], [40.735606666666655, 29.789606666666668], [40.73553666666666, 29.788908333333328], [40.73545666666666, 29.78802], [40.73539666666667, 29.78728], [40.735263333333336, 29.785796666666663], [40.73519833333333, 29.78494166666667], [40.735146666666665, 29.784251666666663], [40.73508833333334, 29.783396666666665], [40.735040000000005, 29.78261666666667], [40.735008333333326, 29.781906666666664], [40.73499, 29.78112666666667], [40.73498, 29.78026833333333], [40.73498, 29.779565], [40.734965, 29.777915], [40.73495333333334, 29.776425], [40.73494333333333, 29.77555166666667], [40.73492666666667, 29.774843333333333], [40.73487833333333, 29.77248], [40.73483833333333, 29.771641666666667], [40.73481666666667, 29.770791666666664], [40.73483, 29.77007], [40.73482166666666, 29.76917166666667], [40.734808333333326, 29.768398333333334], [40.734873333333326, 29.767696666666662], [40.73489666666667, 29.76691], [40.734975, 29.765361666666667], [40.73502, 29.763738333333333], [40.73508666666666, 29.763078333333333], [40.735116666666656, 29.762325], [40.735065, 29.76073], [40.73509166666666, 29.759878333333333], [40.735083333333336, 29.75920166666667], [40.735135, 29.756828333333328], [40.735183333333325, 29.756036666666667], [40.735183333333325, 29.755215], [40.73533833333333, 29.753626666666666], [40.735395, 29.75215], [40.735508333333335, 29.751273333333334], [40.735625, 29.74970833333333], [40.73568333333333, 29.748946666666665], [40.735731666666666, 29.748175], [40.73584, 29.746498333333328], [40.73589666666666, 29.74571333333333], [40.73595, 29.745011666666667], [40.73600666666666, 29.74423833333333], [40.73604, 29.743456666666667], [40.736125, 29.742756666666665], [40.73625666666666, 29.74114666666667], [40.736335, 29.74045], [40.73640666666667, 29.739646666666665], [40.736455, 29.73878833333333], [40.736618333333325, 29.737241666666662], [40.73664833333333, 29.736465], [40.736726666666655, 29.735768333333333], [40.73680333333333, 29.734995], [40.73687, 29.734146666666668], [40.736935, 29.733443333333334], [40.73701333333334, 29.73259], [40.737088333333325, 29.731820000000003], [40.737158333333326, 29.731125], [40.73723666666666, 29.730346666666662], [40.737316666666665, 29.729495], [40.73738333333333, 29.7288], [40.737465, 29.72795166666667], [40.73753666666666, 29.72718], [40.73760166666667, 29.726478333333333], [40.737675, 29.725705], [40.73775, 29.72484], [40.73782166666666, 29.72413333333333], [40.737895, 29.72336], [40.737985, 29.72250166666667], [40.738036666666666, 29.72173], [40.738105, 29.721011666666666], [40.73819833333334, 29.72025], [40.73826833333333, 29.719473333333333], [40.73831333333333, 29.718713333333334], [40.738386666666656, 29.717871666666667], [40.738605, 29.715601666666664], [40.73872, 29.714806666666668], [40.73883166666667, 29.714], [40.73892833333333, 29.71312], [40.73914666666667, 29.71086833333333], [40.739205, 29.710106666666665], [40.73927333333334, 29.709341666666667], [40.739355, 29.70849833333333], [40.73944166666667, 29.70771333333333], [40.73949666666666, 29.707026666666664], [40.73958666666666, 29.706253333333333], [40.73966833333333, 29.705475], [40.739736666666666, 29.704696666666667], [40.73982, 29.703838333333334], [40.739893333333335, 29.70304833333333], [40.73995666666666, 29.702343333333328], [40.740018333333325, 29.701581666666662], [40.740068333333326, 29.70083333333333], [40.74012666666666, 29.70007833333333], [40.74021333333334, 29.69922], [40.74043833333334, 29.696995], [40.740525000000005, 29.696141666666666], [40.74057666666666, 29.695471666666663], [40.740658333333336, 29.694625], [40.74073, 29.693843333333334], [40.74079, 29.693226666666664], [40.74086333333333, 29.69238333333333], [40.740945, 29.691535], [40.741008333333326, 29.690835], [40.741163333333326, 29.689205], [40.741215, 29.68859], [40.7413, 29.68773], [40.741385, 29.686875], [40.74145666666666, 29.68616666666667], [40.74154, 29.685371666666665], [40.74162166666667, 29.684508333333333], [40.741675, 29.683881666666665], [40.741753333333335, 29.68302], [40.74183833333333, 29.682153333333336], [40.741916666666654, 29.681371666666667], [40.74200166666667, 29.680668333333333], [40.74210166666667, 29.679805], [40.74216166666666, 29.679185], [40.742245, 29.67825333333333], [40.742315, 29.677476666666667], [40.742385, 29.67671], [40.74244, 29.676018333333328], [40.74251, 29.675186666666665], [40.74257833333333, 29.674485], [40.742666666666665, 29.67362333333333], [40.742738333333335, 29.672841666666667], [40.74280833333333, 29.67206333333333], [40.742946666666654, 29.6705], [40.743036666666654, 29.669693333333328], [40.74310333333334, 29.668906666666665], [40.743143333333336, 29.668148333333328], [40.74319333333334, 29.66736833333333], [40.743306666666655, 29.6658], [40.74336666666667, 29.66501833333333], [40.743495, 29.663441666666664], [40.743565, 29.662653333333328], [40.743705, 29.661055], [40.74375333333333, 29.66027833333333], [40.74382166666666, 29.65948], [40.74389666666666, 29.658673333333336], [40.74408, 29.656323333333333], [40.744115, 29.65556666666667], [40.74418, 29.654775], [40.74422666666667, 29.654016666666667], [40.74426833333334, 29.653263333333328], [40.744295, 29.652536666666663], [40.74436166666667, 29.651670000000003], [40.744433333333326, 29.650891666666663], [40.74449333333334, 29.650211666666667], [40.74456, 29.649365], [40.744735, 29.647093333333327], [40.74478, 29.64636], [40.744825, 29.64568333333333], [40.744885, 29.64484666666667], [40.74493333333333, 29.644095], [40.74498166666666, 29.643331666666665], [40.745078333333325, 29.641808333333334], [40.745131666666666, 29.641113333333333], [40.745191666666656, 29.64028833333333], [40.74524666666667, 29.639531666666667], [40.745395, 29.637241666666668], [40.74543333333334, 29.636555], [40.74548, 29.635718333333333], [40.745575, 29.634273333333333], [40.745763333333336, 29.631986666666663], [40.745825, 29.63122], [40.745885, 29.630385], [40.74592, 29.6297], [40.745961666666666, 29.628871666666665], [40.74599333333333, 29.628126666666667], [40.746023333333326, 29.627458333333333], [40.746065, 29.626631666666665], [40.74611333333333, 29.625868333333337], [40.746161666666666, 29.625156666666665], [40.746221666666656, 29.624313333333337], [40.74627666666667, 29.623565], [40.74638333333333, 29.622110000000003], [40.746431666666666, 29.621336666666664], [40.74647333333333, 29.62063833333333], [40.74661, 29.61837], [40.746653333333335, 29.6176], [40.74669166666667, 29.616836666666664], [40.74677, 29.615336666666668], [40.746811666666666, 29.61458], [40.74688166666667, 29.61308166666667], [40.74696, 29.61166], [40.74701, 29.610846666666664], [40.74707, 29.61008333333333], [40.747161666666656, 29.60860166666667], [40.747245, 29.607201666666665], [40.747298333333326, 29.606385], [40.747418333333336, 29.604255], [40.74746, 29.603441666666665], [40.74753833333333, 29.601985], [40.747588333333326, 29.601243333333333], [40.747653333333325, 29.60063333333333], [40.74771333333333, 29.59979666666667], [40.747755, 29.599145], [40.74776, 29.598261666666662], [40.74793833333333, 29.596851666666662], [40.748021666666666, 29.595558333333333], [40.74803833333333, 29.59496333333333], [40.74808333333333, 29.594161666666665], [40.748135000000005, 29.593495], [40.74819, 29.592835], [40.748268333333336, 29.591618333333333], [40.74828166666667, 29.59106], [40.74832666666667, 29.590306666666667], [40.748365, 29.589675], [40.74840833333334, 29.58905], [40.748455, 29.58791], [40.74850166666667, 29.58735666666667], [40.74856166666667, 29.586621666666662], [40.748738333333336, 29.58476333333333], [40.748801666666665, 29.584206666666667], [40.74882333333333, 29.58367666666667], [40.748835, 29.58297], [40.748871666666666, 29.58237], [40.74891333333333, 29.581765], [40.74896, 29.581151666666663], [40.74898333333333, 29.580608333333327], [40.74901333333333, 29.580061666666666], [40.7491, 29.57933333333333], [40.749153333333325, 29.578101666666665], [40.74919333333333, 29.57748666666667], [40.74921500000001, 29.57694], [40.749285, 29.575668333333333], [40.749333333333325, 29.575048333333328], [40.749376666666656, 29.574436666666667], [40.74941833333333, 29.57382], [40.74946166666666, 29.573266666666665], [40.74956833333333, 29.57137], [40.74961166666667, 29.570746666666665], [40.749665, 29.570171666666667], [40.74970166666667, 29.569553333333328], [40.74976166666667, 29.568871666666663], [40.74982166666666, 29.568311666666663], [40.74992833333333, 29.56704], [40.74998833333333, 29.56648333333333], [40.750146666666666, 29.56518], [40.750298333333326, 29.563951666666664], [40.75038, 29.56332666666667], [40.75049, 29.56213333333333], [40.75055166666667, 29.56146833333333], [40.750605, 29.560886666666665], [40.750645, 29.560285], [40.750708333333336, 29.55967], [40.75076166666666, 29.559116666666668], [40.75083333333334, 29.55851], [40.750916666666654, 29.55783333333333], [40.75099, 29.55724], [40.751045, 29.55662], [40.75109833333333, 29.555968333333333], [40.751141666666655, 29.555431666666667], [40.751188333333324, 29.55486], [40.75130833333333, 29.55362], [40.751356666666666, 29.553035], [40.75140666666666, 29.55242666666667], [40.75146, 29.55187], [40.75151833333334, 29.55126], [40.751591666666656, 29.550583333333336], [40.75166166666667, 29.54996333333333], [40.75173166666666, 29.549341666666667], [40.751798333333326, 29.54873333333333], [40.751863333333326, 29.54818333333333], [40.75193, 29.547576666666664], [40.752071666666666, 29.54633], [40.752133333333326, 29.545713333333328], [40.75219166666666, 29.545101666666667], [40.75224833333333, 29.54455], [40.75231833333333, 29.543876666666662], [40.752388333333336, 29.543251666666663], [40.75245333333333, 29.542636666666667], [40.752518333333335, 29.542025], [40.752578333333325, 29.541413333333328], [40.75264666666667, 29.540796666666665], [40.75274833333334, 29.539625], [40.75282166666666, 29.538965], [40.75288666666666, 29.53837], [40.75296, 29.537746666666667], [40.75302333333333, 29.53715], [40.75309, 29.536555], [40.753146666666666, 29.536013333333337], [40.75323333333333, 29.535348333333328], [40.75330833333333, 29.534748333333333], [40.75338666666666, 29.53414666666667], [40.753475, 29.533556666666662], [40.75355833333333, 29.532950000000003], [40.75361, 29.53242], [40.75366833333333, 29.53176333333333], [40.753728333333335, 29.53116], [40.75378333333333, 29.53056], [40.753833333333326, 29.52996166666667], [40.753878333333326, 29.52935666666667], [40.75400166666667, 29.52816333333333], [40.75404666666667, 29.527565], [40.75416666666667, 29.52635666666667], [40.75423666666666, 29.52578], [40.75430166666667, 29.525250000000003], [40.75437166666666, 29.524651666666667], [40.75441, 29.524036666666667], [40.75451833333333, 29.52347166666667], [40.754556666666666, 29.522881666666667], [40.75463666666667, 29.521733333333334], [40.75468166666667, 29.521130000000003], [40.75471833333334, 29.520485], [40.75475166666667, 29.519298333333328], [40.754765, 29.518711666666665], [40.754760000000005, 29.518175], [40.75469666666666, 29.516943333333334], [40.754673333333336, 29.516353333333328], [40.75454, 29.515273333333333], [40.75445666666667, 29.51472833333333], [40.754488333333335, 29.51409], [40.75448666666667, 29.513405], [40.754448333333336, 29.512805], [40.75439, 29.512275], [40.75430833333333, 29.511633333333336], [40.754233333333325, 29.51105], [40.75417, 29.51053166666667], [40.754086666666666, 29.509888333333333], [40.754018333333335, 29.509305], [40.75395666666667, 29.508776666666662], [40.753881666666665, 29.50813], [40.75381, 29.50753333333333], [40.753755, 29.50699], [40.75370333333333, 29.506341666666668], [40.75362333333333, 29.50577], [40.75355, 29.505245], [40.75347, 29.50460333333333], [40.753395, 29.504018333333327], [40.75333666666666, 29.503491666666665], [40.75327166666667, 29.50289833333333], [40.75320166666666, 29.502246666666668], [40.75314166666667, 29.501716666666667], [40.75308, 29.501126666666668], [40.75301666666667, 29.500466666666668], [40.752966666666666, 29.499931666666665], [40.75291166666667, 29.49933833333333], [40.752851666666665, 29.49869], [40.752785, 29.498096666666665], [40.75272833333334, 29.497561666666662], [40.752665, 29.496915], [40.752541666666666, 29.495786666666667], [40.75247333333333, 29.495135], [40.752291666666665, 29.493365], [40.752243333333325, 29.49281833333333], [40.752185, 29.49222166666667], [40.75212833333333, 29.491565], [40.75206166666667, 29.49096833333333], [40.751945, 29.489753333333333], [40.75189, 29.489211666666662], [40.75184, 29.48861], [40.75178, 29.48794666666667], [40.75169833333334, 29.48732333333333], [40.75162666666667, 29.48675666666667], [40.75155, 29.486065], [40.751505, 29.485513333333333], [40.751366666666655, 29.48409333333333], [40.751303333333325, 29.483455], [40.751245, 29.48286], [40.75117333333333, 29.482096666666667], [40.751105, 29.481395000000003], [40.75091333333333, 29.479916666666668], [40.75084833333334, 29.4792], [40.750795, 29.478558333333336], [40.750678333333326, 29.477028333333333], [40.75047666666667, 29.474806666666662], [40.75024333333333, 29.473243333333336], [40.75008666666666, 29.471818333333328], [40.749855, 29.47020333333333], [40.74981, 29.469535], [40.74972666666667, 29.468698333333336], [40.74964333333333, 29.46793166666667], [40.749376666666656, 29.46569333333333], [40.74905833333333, 29.463325], [40.748793333333325, 29.461096666666663], [40.74871, 29.460345], [40.74861166666666, 29.459506666666663], [40.74852166666666, 29.458736666666667], [40.748286666666665, 29.456506666666662], [40.748196666666665, 29.455653333333327], [40.748125, 29.45495333333333], [40.74804, 29.454095], [40.74779333333333, 29.45182], [40.74769333333334, 29.45096333333333], [40.74761333333333, 29.450256666666668], [40.74751666666666, 29.449403333333333], [40.747408333333325, 29.448625], [40.747315, 29.44789666666667], [40.74718666666667, 29.447053333333333], [40.747060000000005, 29.44628], [40.74683166666667, 29.44487833333333], [40.746668333333325, 29.444033333333334], [40.74657666666667, 29.443421666666666], [40.746448333333326, 29.4425], [40.746251666666666, 29.44103], [40.74615166666667, 29.440255], [40.746030000000005, 29.43941166666667], [40.745945, 29.43879833333333], [40.74581166666666, 29.437875], [40.745505, 29.435635], [40.745385000000006, 29.434786666666664], [40.745268333333335, 29.43417], [40.745151666666665, 29.433245], [40.745041666666665, 29.432471666666668], [40.744800000000005, 29.430975], [40.74467666666667, 29.430106666666667], [40.74458166666666, 29.429471666666664], [40.74444666666666, 29.428528333333336], [40.744346666666665, 29.427751666666666], [40.744236666666666, 29.427055], [40.74411, 29.426278333333336], [40.743981666666656, 29.425428333333333], [40.743885, 29.42481], [40.743741666666665, 29.423883333333333], [40.743633333333335, 29.423103333333334], [40.743555, 29.422405], [40.74333166666667, 29.420776666666665], [40.74323666666666, 29.420166666666667], [40.74305833333334, 29.41923166666667], [40.74293166666666, 29.41847333333333], [40.742828333333335, 29.417781666666663], [40.742708333333326, 29.417011666666667], [40.742603333333335, 29.416241666666668], [40.74224166666667, 29.413868333333333], [40.742135, 29.413186666666665], [40.74201666666667, 29.412423333333333], [40.74190166666666, 29.411663333333333], [40.74167, 29.410043333333327], [40.74156333333334, 29.40933833333333], [40.741443333333336, 29.408556666666662], [40.74106, 29.40626], [40.74094, 29.40552333333333], [40.74055166666666, 29.40336166666667], [40.74041833333333, 29.40266666666667], [40.740286666666655, 29.40197833333333], [40.74016, 29.401301666666665], [40.74004833333333, 29.400645], [40.73992333333333, 29.399918333333336], [40.73973, 29.3987], [40.739538333333336, 29.397425], [40.739435, 29.396786666666667], [40.73932166666666, 29.39609], [40.73922666666667, 29.395533333333333], [40.739111666666666, 29.39492166666667], [40.739003333333336, 29.394311666666667], [40.738895, 29.39371], [40.73878666666667, 29.393105], [40.73868, 29.392428333333328], [40.73859333333333, 29.391875], [40.73848833333333, 29.391275], [40.738388333333326, 29.39067], [40.73829166666666, 29.390071666666664], [40.738191666666665, 29.389483333333327], [40.73793, 29.387716666666662], [40.73775666666667, 29.386536666666665], [40.73764666666667, 29.385965], [40.73752666666667, 29.385406666666665], [40.73742166666667, 29.384846666666665], [40.73732, 29.3843], [40.73721166666667, 29.383715], [40.73713, 29.38323833333333], [40.73704, 29.38271333333333], [40.736943333333336, 29.382186666666662], [40.736773333333325, 29.381171666666667], [40.73667833333333, 29.380611666666667], [40.736601666666665, 29.380161666666663], [40.73657166666667, 29.379618333333333], [40.73651, 29.379138333333334], [40.73643166666666, 29.37862], [40.736395, 29.378113333333328], [40.736196666666665, 29.3772], [40.73616666666666, 29.376721666666665], [40.73604, 29.376325], [40.735903333333326, 29.375870000000003], [40.735835, 29.375415], [40.735753333333335, 29.37498], [40.735696666666655, 29.374621666666663], [40.735618333333335, 29.374085], [40.73557666666667, 29.373681666666663], [40.735555, 29.37324166666667], [40.73554, 29.372768333333333], [40.735696666666655, 29.374621666666663], [40.7355, 29.37195333333333], [40.735488333333336, 29.371383333333327], [40.73548666666667, 29.370941666666667], [40.73548666666667, 29.370438333333333], [40.735498333333325, 29.36989], [40.735495, 29.369366666666668], [40.73548666666667, 29.368936666666663], [40.73545666666666, 29.36826166666667], [40.73542833333333, 29.367745], [40.73540166666666, 29.367158333333336], [40.735373333333335, 29.366513333333334], [40.73535, 29.365915], [40.73533, 29.365375], [40.73533, 29.364733333333334], [40.735318333333325, 29.364173333333333], [40.735155, 29.362675000000003], [40.73516666666667, 29.362018333333328], [40.735195, 29.361428333333333], [40.73519833333333, 29.36004], [40.735195, 29.35856833333333], [40.735195, 29.35856833333333], [40.73521333333333, 29.35787333333333], [40.73522166666666, 29.357233333333333], [40.73519666666667, 29.355711666666664], [40.73518, 29.354076666666668], [40.735173333333336, 29.353293333333333], [40.735193333333335, 29.352623333333334], [40.73521, 29.351785], [40.73518, 29.34703333333333], [40.73516666666667, 29.346305], [40.735146666666665, 29.345405000000003], [40.73513666666666, 29.344601666666662], [40.73512166666667, 29.343873333333327], [40.735101666666665, 29.343053333333334], [40.735098333333326, 29.342168333333333], [40.7351, 29.338933333333333], [40.73509166666666, 29.338085], [40.73508833333334, 29.33717], [40.73507666666667, 29.33642166666667], [40.735035, 29.33389333333333], [40.73497, 29.33133], [40.73499666666667, 29.32964833333333], [40.73502833333334, 29.327946666666666], [40.735035, 29.327013333333333], [40.735035, 29.326243333333327], [40.734836666666666, 29.322713333333336], [40.73478833333333, 29.321755], [40.73481, 29.32100833333333], [40.73490833333334, 29.31943833333333], [40.73489666666667, 29.31853333333333], [40.73496, 29.316793333333333], [40.734965, 29.31428833333333], [40.73495333333334, 29.31260166666667], [40.73490833333334, 29.31083], [40.73492, 29.30988166666667], [40.734945, 29.30912333333333], [40.73493833333334, 29.308161666666667], [40.734995000000005, 29.306996666666667], [40.735005, 29.306485], [40.734955, 29.30485666666667], [40.73495666666666, 29.304685], [40.73501666666667, 29.302345], [40.73492, 29.299725], [40.734885, 29.298158333333333], [40.734885, 29.297131666666665], [40.73488333333333, 29.29661666666667], [40.73488333333333, 29.296098333333337], [40.73494166666667, 29.293046666666665], [40.73494166666667, 29.292023333333336], [40.734921666666665, 29.290986666666665], [40.734845, 29.286861666666667], [40.73484, 29.28635166666667], [40.73484, 29.28583833333333], [40.73479333333333, 29.282731666666667], [40.734765, 29.281701666666667], [40.73474333333333, 29.28067], [40.73468166666667, 29.27858666666667], [40.73464, 29.277541666666664], [40.734603333333325, 29.2765], [40.734576666666655, 29.27547], [40.73455333333333, 29.273401666666665], [40.734558333333325, 29.272375], [40.73455166666666, 29.271341666666668], [40.73454, 29.270826666666668], [40.73453, 29.270311666666665], [40.73451166666667, 29.26928666666667], [40.734505, 29.26886], [40.734468333333325, 29.267245], [40.734458333333336, 29.26673], [40.73444666666667, 29.26622166666667], [40.73442166666667, 29.26519833333333], [40.734396666666655, 29.26417], [40.734355, 29.262126666666667], [40.73434833333333, 29.261615], [40.734295, 29.259646666666665], [40.73427166666667, 29.25870666666667], [40.73426666666667, 29.25853333333333], [40.734251666666665, 29.258021666666664], [40.734198333333325, 29.256145], [40.73417333333334, 29.255458333333333], [40.73416666666667, 29.255288333333333], [40.73415166666666, 29.254945000000003], [40.73403, 29.25186833333333], [40.73399333333334, 29.251025], [40.733945, 29.24942], [40.73392666666666, 29.24848666666667], [40.733891666666665, 29.246788333333328], [40.73386666666667, 29.24593833333333], [40.733806666666666, 29.244335], [40.73377666666667, 29.2434], [40.73371833333333, 29.24168833333333], [40.733693333333335, 29.24083166666667], [40.733655, 29.239193333333333], [40.733625, 29.238255], [40.73357833333333, 29.236725], [40.733515, 29.2357], [40.73346, 29.234076666666667], [40.733428333333336, 29.233143333333327], [40.733428333333336, 29.23160833333333], [40.73340333333333, 29.230591666666665], [40.733385, 29.228988333333334], [40.733418333333326, 29.228053333333328], [40.733445, 29.22549666666667], [40.73340333333333, 29.22293], [40.73339, 29.22143], [40.733385, 29.22043], [40.733385, 29.219581666666667], [40.73340333333333, 29.217866666666666], [40.733415, 29.216316666666668], [40.73341166666666, 29.215293333333328], [40.733381666666666, 29.213601666666666], [40.73336, 29.21276], [40.733355, 29.211920000000003], [40.733365000000006, 29.211238333333327], [40.73337833333333, 29.210215], [40.733395, 29.20936333333333], [40.733405, 29.20850833333333], [40.733435, 29.2068], [40.733445, 29.20425333333333], [40.73346, 29.20257833333333], [40.73345, 29.201741666666667], [40.733415, 29.199193333333334], [40.733415, 29.198341666666668], [40.733415, 29.197488333333336], [40.733415, 29.196641666666668], [40.73340333333333, 29.194948333333333], [40.73337833333333, 29.193265], [40.733355, 29.191601666666667], [40.733348333333325, 29.189905], [40.733385, 29.188235], [40.73348, 29.18657333333333], [40.733526666666656, 29.184886666666667], [40.733526666666656, 29.184886666666667], [40.73354666666666, 29.18405166666667], [40.733575, 29.181536666666663], [40.73358333333333, 29.18069], [40.7336, 29.17983], [40.733616666666656, 29.178975], [40.73365833333333, 29.17643333333333], [40.733691666666665, 29.174755], [40.73375833333333, 29.171405], [40.73378, 29.169716666666663], [40.733798333333326, 29.168855], [40.73381, 29.167988333333334], [40.733823333333326, 29.16720833333333], [40.733795, 29.166241666666668], [40.733865, 29.164535], [40.73390333333334, 29.162851666666665], [40.733963333333335, 29.161188333333328], [40.733985, 29.16035], [40.73400333333333, 29.159513333333333], [40.73401666666666, 29.158761666666667], [40.73406333333333, 29.156213333333334], [40.73410666666666, 29.15442833333333], [40.734125, 29.153655], [40.734155, 29.15271166666667], [40.734186666666666, 29.14941], [40.734203333333326, 29.147738333333333], [40.73422166666667, 29.146893333333328], [40.73422166666667, 29.145186666666667], [40.73422166666667, 29.144333333333336], [40.73422666666667, 29.143563333333336], [40.734233333333336, 29.14261833333333], [40.73424166666666, 29.141763333333333], [40.73427333333333, 29.139216666666663], [40.73431666666667, 29.137533333333334], [40.734335, 29.136693333333334], [40.734375, 29.135013333333333], [40.73440166666667, 29.13416], [40.734445, 29.13336], [40.734486666666655, 29.13239666666667], [40.734545, 29.130741666666665], [40.73456833333333, 29.129786666666668], [40.734593333333336, 29.128923333333333], [40.734646666666656, 29.127205], [40.73467166666667, 29.12644], [40.73472833333334, 29.124638333333333], [40.73474, 29.123111666666667], [40.73475333333333, 29.12218833333333], [40.734765, 29.121423333333333], [40.734785, 29.119628333333328], [40.73479333333333, 29.118846666666663], [40.73481833333334, 29.11702], [40.73483, 29.116248333333328], [40.73485166666667, 29.114441666666668], [40.73485166666667, 29.114441666666668], [40.73497333333333, 29.111898333333333], [40.73497333333333, 29.11115333333333], [40.73498833333333, 29.110241666666663], [40.73501666666667, 29.10864666666667], [40.73504333333334, 29.107785], [40.735111666666654, 29.106035], [40.73517833333334, 29.104221666666668], [40.735285, 29.101661666666665], [40.735315, 29.100885], [40.73536833333333, 29.099096666666664], [40.735438333333335, 29.096633333333333], [40.735471666666655, 29.09578833333333], [40.73548, 29.094948333333328], [40.73547333333333, 29.093185], [40.735408333333325, 29.09063833333333], [40.73537833333333, 29.08987833333333], [40.73527, 29.087375], [40.735245, 29.084803333333333], [40.73522333333334, 29.082966666666668], [40.735251666666656, 29.081288333333337], [40.73522166666666, 29.07948833333333], [40.735191666666665, 29.07877166666667], [40.73516666666667, 29.07782333333333], [40.73508833333334, 29.074391666666667], [40.73510666666667, 29.073545000000003], [40.735098333333326, 29.07268833333333], [40.73505, 29.068408333333327], [40.735005, 29.066691666666667], [40.734945, 29.065053333333328], [40.73491, 29.063321666666663], [40.73489666666667, 29.062476666666665], [40.73491, 29.06165333333333], [40.734873333333326, 29.059988333333333], [40.734860000000005, 29.059155], [40.73483, 29.056626666666663], [40.734763333333326, 29.054043333333333], [40.73472666666667, 29.051493333333333], [40.73471333333334, 29.048935], [40.734718333333326, 29.048075], [40.734711666666655, 29.04643], [40.734705, 29.044751666666667], [40.734693333333325, 29.043903333333333], [40.734678333333335, 29.043043333333333], [40.734628333333326, 29.041381666666663], [40.734588333333335, 29.03970333333333], [40.73457333333333, 29.03887333333333], [40.73456, 29.036371666666664], [40.73457, 29.033886666666668], [40.734565, 29.03138], [40.73454, 29.02978333333333], [40.734521666666666, 29.028871666666664], [40.734498333333335, 29.02638], [40.73450666666666, 29.024753333333333], [40.73450666666666, 29.02217166666667], [40.73450666666666, 29.021366666666665], [40.734505, 29.01888333333333], [40.734486666666655, 29.01720333333333], [40.73443666666667, 29.013845], [40.734435, 29.01215], [40.73443, 29.01130833333333], [40.734415, 29.01053166666667], [40.73443833333333, 29.009688333333333], [40.73444666666667, 29.008848333333333], [40.73443, 29.006343333333334], [40.73443, 29.005476666666667], [40.734431666666666, 29.004608333333334], [40.734431666666666, 29.00377], [40.73442, 29.002945], [40.734441666666655, 29.001285], [40.734413333333336, 28.99967833333333], [40.73441, 28.99893], [40.73439333333333, 28.99634], [40.73439333333333, 28.99557666666667], [40.734368333333336, 28.994675], [40.73437666666667, 28.993918333333333], [40.734375, 28.992981666666665], [40.73439, 28.992318333333333], [40.734405, 28.991331666666667], [40.73440833333333, 28.990595], [40.73440833333333, 28.989665], [40.734405, 28.988945], [40.73439166666667, 28.98803333333333], [40.73443833333333, 28.985585], [40.734468333333325, 28.984658333333336], [40.734458333333336, 28.983896666666663], [40.73445, 28.982931666666666], [40.734485, 28.982261666666663], [40.73445166666667, 28.98127], [40.73442166666667, 28.9805], [40.73443666666667, 28.979681666666668], [40.734468333333325, 28.978853333333333], [40.73449, 28.977915], [40.734425, 28.97636], [40.734413333333336, 28.975621666666665], [40.73446166666666, 28.97387], [40.73447166666666, 28.972948333333328], [40.734476666666666, 28.97213333333333], [40.73449666666667, 28.971261666666667], [40.734498333333335, 28.97052], [40.73451, 28.96966], [40.73451666666666, 28.968813333333333], [40.734515, 28.967895], [40.73452833333333, 28.967011666666668], [40.734521666666666, 28.966185], [40.734486666666655, 28.964665], [40.734495, 28.963788333333333], [40.73450666666666, 28.96287], [40.73454, 28.960486666666668], [40.734545, 28.959670000000003], [40.73454666666667, 28.958835], [40.73454666666667, 28.9579], [40.734548333333336, 28.957035], [40.73454166666667, 28.95617833333333], [40.73452833333333, 28.955523333333336], [40.73452, 28.95461], [40.73451666666666, 28.95377166666667], [40.734495, 28.95289], [40.734486666666655, 28.952075], [40.73448333333333, 28.95124666666667], [40.73449, 28.949656666666662], [40.73449166666667, 28.948815000000003], [40.734505, 28.947886666666665], [40.73450166666667, 28.947008333333333], [40.734503333333336, 28.94614333333333], [40.73451, 28.945498333333333], [40.73450666666666, 28.94458333333333], [40.73449166666667, 28.94287166666667], [40.73449166666667, 28.94197], [40.73449166666667, 28.94197], [40.734486666666655, 28.94042166666667], [40.73449166666667, 28.937863333333333], [40.73451, 28.93535333333333], [40.734498333333335, 28.933651666666663], [40.73447166666666, 28.931885], [40.73444666666667, 28.930238333333328], [40.73446, 28.92855833333333], [40.73443, 28.927650000000003], [40.73443, 28.927650000000003], [40.73439833333334, 28.926065], [40.7344, 28.92526], [40.73440666666667, 28.922708333333333], [40.734405, 28.921781666666668], [40.73440166666667, 28.92102], [40.7344, 28.920173333333327], [40.73438, 28.918578333333336], [40.73436333333333, 28.91766], [40.73435333333334, 28.916686666666667], [40.73434666666667, 28.915061666666663], [40.73434, 28.914243333333328], [40.73433666666666, 28.912591666666668], [40.734355, 28.911651666666668], [40.73435333333334, 28.910895], [40.73435666666667, 28.910038333333333], [40.734351666666655, 28.90841333333333], [40.73427, 28.90752666666667], [40.73419666666666, 28.906635], [40.73418, 28.905866666666668], [40.73424, 28.904966666666667], [40.734306666666654, 28.90405833333333], [40.73422166666667, 28.903188333333333], [40.73422166666667, 28.903188333333333], [40.734195, 28.902438333333336], [40.73418166666667, 28.901511666666668], [40.73417333333334, 28.900755], [40.73417666666667, 28.899838333333328], [40.73417666666667, 28.899081666666667], [40.734161666666665, 28.898151666666667], [40.734143333333336, 28.89739], [40.73412833333334, 28.89655], [40.734116666666665, 28.89569833333333], [40.734113333333326, 28.89475333333333], [40.73411, 28.893981666666665], [40.73409333333333, 28.891405], [40.73409333333333, 28.89054666666667], [40.734095, 28.88961], [40.73410166666667, 28.88884333333333], [40.734095, 28.88791833333333], [40.73408666666667, 28.887165], [40.734071666666665, 28.886328333333328], [40.73405, 28.885495], [40.734035, 28.88456833333333], [40.73401666666666, 28.883811666666663], [40.73399666666667, 28.882888333333334], [40.73399666666667, 28.882888333333334], [40.733981666666665, 28.88212833333333], [40.733963333333335, 28.88128833333333], [40.73394833333334, 28.88043833333333], [40.73392166666667, 28.879505], [40.733925, 28.878753333333336], [40.73392833333333, 28.877836666666667], [40.73392833333333, 28.877836666666667], [40.733933333333326, 28.877076666666667], [40.733915, 28.87623166666667], [40.73390833333334, 28.874463333333328], [40.733841666666656, 28.87275333333333], [40.733841666666656, 28.87275333333333], [40.73381833333334, 28.87199], [40.733795, 28.871135], [40.733798333333326, 28.869335], [40.73379333333333, 28.86856333333333], [40.73382, 28.86603], [40.733806666666666, 28.865211666666667], [40.73378833333334, 28.86359666666667], [40.733733333333326, 28.862746666666663], [40.733733333333326, 28.862746666666663], [40.73367666666665, 28.86189166666667], [40.73363166666666, 28.861055], [40.733575, 28.860238333333328], [40.733536666666666, 28.859351666666665], [40.733475, 28.857793333333333], [40.73348666666666, 28.856148333333334], [40.73349, 28.85532], [40.73348, 28.854413333333333], [40.733463333333326, 28.853673333333333], [40.733356666666666, 28.851183333333328], [40.73328, 28.849491666666665], [40.73328, 28.849491666666665], [40.733203333333336, 28.848715], [40.733185000000006, 28.847851666666667], [40.733138333333336, 28.847068333333333], [40.733123333333324, 28.846245], [40.733135, 28.84455833333333], [40.733123333333324, 28.843743333333336], [40.73307833333333, 28.842115], [40.73305666666667, 28.84130833333333], [40.733013333333325, 28.839675], [40.732996666666665, 28.838855], [40.732975, 28.838038333333333], [40.732906666666665, 28.83558333333333], [40.732888333333335, 28.834766666666667], [40.732888333333335, 28.834766666666667], [40.73285166666666, 28.83311], [40.73282833333334, 28.83138333333333], [40.732665, 28.82740833333333], [40.73265, 28.826451666666667], [40.732575, 28.82481], [40.732505, 28.82335], [40.73247, 28.82244166666667], [40.732433333333326, 28.821545], [40.732396666666666, 28.819891666666667], [40.73228, 28.816606666666665], [40.732195, 28.814976666666663], [40.73215666666666, 28.81424], [40.732126666666666, 28.813496666666666], [40.732105, 28.81258], [40.732085, 28.81166333333333], [40.732063333333336, 28.810838333333333], [40.732038333333335, 28.81001666666667], [40.732018333333336, 28.809275], [40.73194166666666, 28.80672666666667], [40.73191, 28.805906666666665], [40.731885000000005, 28.805083333333336], [40.731855, 28.803608333333333], [40.731855, 28.803608333333333], [40.73181666666667, 28.80181], [40.73177166666667, 28.800196666666668], [40.731705000000005, 28.798716666666667], [40.731665, 28.7978], [40.73164, 28.796956666666667], [40.73161, 28.796031666666668], [40.731585, 28.794466666666665], [40.73158, 28.792786666666665], [40.731565, 28.791975], [40.73155333333333, 28.791163333333333], [40.73152666666667, 28.790283333333328], [40.73152666666667, 28.790283333333328], [40.73150333333333, 28.789638333333336], [40.73147166666667, 28.788831666666667], [40.73143, 28.787951666666668], [40.73138166666667, 28.78715], [40.731345000000005, 28.786338333333333], [40.731241666666655, 28.78470833333333], [40.731195, 28.783048333333333], [40.73118, 28.782203333333328], [40.731163333333335, 28.781358333333333], [40.73106666666667, 28.779068333333328], [40.73102166666667, 28.778206666666662], [40.73099166666666, 28.77735], [40.73095166666667, 28.776526666666665], [40.730913333333326, 28.775638333333333], [40.73088, 28.77411833333333], [40.73083833333333, 28.773335], [40.73069833333333, 28.770885], [40.73066333333334, 28.76923333333333], [40.73063666666666, 28.76748], [40.730575, 28.765908333333336], [40.73053333333333, 28.764258333333327], [40.730465, 28.76251166666667], [40.73039166666666, 28.760931666666668], [40.73033333333333, 28.760115], [40.730246666666666, 28.75848166666667], [40.73016333333333, 28.755993333333333], [40.73015166666666, 28.75514833333333], [40.730133333333335, 28.754313333333336], [40.73009666666666, 28.753505], [40.73009666666666, 28.753505], [40.73006, 28.752596666666665], [40.729965, 28.75103], [40.729958333333336, 28.749211666666667], [40.72972166666667, 28.744198333333333], [40.72972166666667, 28.744198333333333], [40.729658333333326, 28.74347333333333], [40.729616666666665, 28.742558333333328], [40.72961, 28.7417], [40.72959, 28.740848333333336], [40.729555, 28.740001666666668], [40.729486666666666, 28.73841], [40.729465, 28.737481666666667], [40.72943, 28.7358], [40.72940166666666, 28.734966666666665], [40.72938, 28.734131666666663], [40.729301666666665, 28.73163], [40.729251666666656, 28.730798333333333], [40.72921166666666, 28.729975000000003], [40.72917, 28.729156666666665], [40.729118333333325, 28.72754833333333], [40.72909666666667, 28.726611666666667], [40.729063333333336, 28.72576833333333], [40.729016666666666, 28.724941666666663], [40.728965, 28.724118333333333], [40.72891333333334, 28.723376666666663], [40.728846666666655, 28.722555], [40.728775000000006, 28.72164666666667], [40.728730000000006, 28.72078833333333], [40.728671666666656, 28.719955], [40.72863, 28.71910833333333], [40.72858, 28.71828], [40.7285, 28.71660333333333], [40.72845333333333, 28.71579], [40.728411666666666, 28.71495], [40.72836666666667, 28.714101666666668], [40.72827166666666, 28.712476666666664], [40.72823166666667, 28.711503333333333], [40.72818166666666, 28.710705], [40.728116666666665, 28.709826666666668], [40.72807, 28.70897833333333], [40.72800166666666, 28.707358333333328], [40.72796, 28.70642666666667], [40.72791666666667, 28.705671666666667], [40.727863333333325, 28.704746666666665], [40.727825, 28.704076666666666], [40.727763333333336, 28.703156666666665], [40.727698333333336, 28.70224], [40.72746833333333, 28.69908], [40.72732333333333, 28.69727], [40.72721333333333, 28.695643333333333], [40.727146666666656, 28.694713333333333], [40.727105, 28.69403], [40.727056666666655, 28.69307333333333], [40.72691833333333, 28.690538333333333], [40.726865, 28.68958333333333], [40.726835, 28.68888666666667], [40.726775, 28.687983333333328], [40.726623333333336, 28.68543], [40.72658166666666, 28.684471666666663], [40.726551666666666, 28.68378], [40.726503333333326, 28.68284], [40.72637833333333, 28.680286666666667], [40.726305, 28.67869166666667], [40.72627333333333, 28.67777], [40.726231666666656, 28.67684833333333], [40.726225, 28.676138333333327], [40.72612333333333, 28.67356333333333], [40.72609333333333, 28.67262333333333], [40.725963333333326, 28.670008333333328], [40.725915, 28.66916], [40.72583166666666, 28.667475000000003], [40.725773333333336, 28.666588333333333], [40.72575, 28.665726666666668], [40.725705, 28.664976666666668], [40.72566, 28.66414], [40.72566, 28.66414], [40.72562666666667, 28.663306666666664], [40.72562666666667, 28.663306666666664], [40.72558166666667, 28.662461666666665], [40.725555, 28.66151333333333], [40.72548833333334, 28.659895], [40.72544333333334, 28.65904], [40.725348333333336, 28.657415], [40.725268333333325, 28.655581666666667], [40.72524, 28.654811666666667], [40.725211666666674, 28.653931666666665], [40.725186666666666, 28.653065], [40.725186666666666, 28.653065], [40.72515333333333, 28.652296666666665], [40.72509333333333, 28.65129166666667], [40.72505666666667, 28.650448333333333], [40.725008333333335, 28.64886], [40.725, 28.647995], [40.72497333333333, 28.64722], [40.724933333333325, 28.64621333333333], [40.724875, 28.644693333333333], [40.72484666666666, 28.643741666666664], [40.7248, 28.642875], [40.7247, 28.641345], [40.72467166666667, 28.640463333333333], [40.724618333333325, 28.63964333333333], [40.72461333333333, 28.63761833333333], [40.72461333333333, 28.63761833333333], [40.724488333333326, 28.63612333333333], [40.72446833333333, 28.63528], [40.72445333333334, 28.63448], [40.72441666666667, 28.632605], [40.72441666666667, 28.632605], [40.724338333333336, 28.631036666666667], [40.72427666666666, 28.63012666666667], [40.724261666666656, 28.629338333333333], [40.72422, 28.628431666666664], [40.72422, 28.628431666666664], [40.724218333333326, 28.627463333333328], [40.7241, 28.62414833333333], [40.723975, 28.622303333333328], [40.723975, 28.622303333333328], [40.72396666666666, 28.62222], [40.72393833333333, 28.621621666666663], [40.723931666666665, 28.621453333333328], [40.72389833333333, 28.620665], [40.723883333333326, 28.620146666666667], [40.723875, 28.61979833333333], [40.723865, 28.619635], [40.723843333333335, 28.619035], [40.72381666666667, 28.61809], [40.723775, 28.617036666666667], [40.723753333333335, 28.616441666666667], [40.72373, 28.61549833333333], [40.7237, 28.614481666666663], [40.72367, 28.613885], [40.723655, 28.613356666666668], [40.72361833333333, 28.61185333333333], [40.72360666666666, 28.611235], [40.723553333333335, 28.61032], [40.723553333333335, 28.61032], [40.72354666666667, 28.609255], [40.72351333333334, 28.60864666666667], [40.723486666666666, 28.608136666666667], [40.723441666666666, 28.6076], [40.723441666666666, 28.60716], [40.72344666666666, 28.606636666666667], [40.723423333333336, 28.606033333333336], [40.72334166666667, 28.60458], [40.723306666666666, 28.604061666666663], [40.72331166666667, 28.60345333333333], [40.72332166666667, 28.602935], [40.72334666666666, 28.602418333333333], [40.723375, 28.601993333333333], [40.72341166666667, 28.601488333333336], [40.72344666666666, 28.600905], [40.72351666666666, 28.59989333333333], [40.723545, 28.59939166666667], [40.723635, 28.59835333333333], [40.72367, 28.597808333333333], [40.7237, 28.597275], [40.72372, 28.596851666666662], [40.723745, 28.596341666666667], [40.723768333333325, 28.59584166666667], [40.723895, 28.593743333333336], [40.723925, 28.59314833333333], [40.72395, 28.592636666666667], [40.723976666666665, 28.592126666666665], [40.723991666666656, 28.591716666666667], [40.724021666666665, 28.5912], [40.72405166666666, 28.590685], [40.724248333333335, 28.58748333333333], [40.724273333333336, 28.586965000000003], [40.72429833333333, 28.58645166666667], [40.72431166666667, 28.586036666666665], [40.724345, 28.585525], [40.72437666666666, 28.584995], [40.724436666666655, 28.584011666666665], [40.724443333333326, 28.583746666666663], [40.72445333333334, 28.583483333333334], [40.72447833333333, 28.582881666666665], [40.72452166666666, 28.581865], [40.72453666666667, 28.58137], [40.724538333333335, 28.581288333333337], [40.72455833333333, 28.58093833333333], [40.72459333333334, 28.58041833333333], [40.724708333333325, 28.578536666666665], [40.724738333333335, 28.57771166666667], [40.72476833333334, 28.576880000000003], [40.724936666666665, 28.573425], [40.72497166666666, 28.572603333333333], [40.72497333333333, 28.57252], [40.724990000000005, 28.572016666666663], [40.725, 28.57176666666667], [40.725015, 28.571515], [40.72504166666666, 28.571011666666667], [40.72507, 28.570421666666668], [40.725085, 28.570165], [40.72509166666667, 28.56999666666667], [40.725116666666665, 28.569406666666666], [40.725116666666665, 28.569323333333333], [40.72513166666667, 28.568988333333333], [40.7252, 28.567823333333333], [40.72520833333333, 28.56740166666667], [40.725231666666666, 28.566873333333334], [40.725335, 28.565821666666668], [40.725335, 28.565821666666668], [40.72536, 28.564258333333328], [40.72536, 28.564258333333328], [40.72549, 28.561756666666668], [40.725513333333325, 28.561265], [40.725538333333326, 28.56075], [40.72559, 28.560106666666663], [40.725611666666666, 28.55968333333333], [40.725675, 28.55911], [40.72577666666666, 28.558176666666668], [40.72579833333334, 28.556661666666667], [40.72580333333334, 28.556171666666668], [40.72582166666666, 28.555611666666668], [40.725863333333336, 28.554501666666667], [40.725876666666665, 28.553928333333328], [40.725895, 28.55351333333333], [40.72593833333334, 28.552968333333336], [40.726011666666665, 28.55204833333333], [40.72604333333334, 28.551515], [40.726056666666665, 28.55096333333333], [40.726135, 28.54938], [40.72626666666667, 28.54684], [40.72629666666667, 28.54633], [40.72631666666666, 28.545821666666665], [40.726368333333326, 28.544716666666663], [40.726453333333325, 28.543715], [40.726475, 28.54326166666667], [40.72653666666666, 28.54169166666667], [40.72656333333334, 28.541185], [40.72659166666666, 28.540591666666668], [40.72666166666667, 28.53915], [40.726695, 28.53862], [40.72676666666667, 28.537496666666662], [40.72682833333333, 28.53655666666667], [40.726858333333325, 28.536055], [40.72689166666667, 28.53546], [40.72702, 28.532911666666667], [40.72711666666667, 28.53084], [40.72714, 28.530346666666667], [40.72718833333333, 28.529335], [40.72721166666666, 28.528905], [40.72723, 28.528396666666666], [40.727506666666656, 28.52329333333333], [40.72757166666667, 28.522273333333327], [40.72778166666667, 28.518675], [40.727808333333336, 28.518155], [40.72783, 28.517121666666664], [40.72791666666667, 28.515498333333333], [40.727953333333325, 28.51352333333333], [40.727965000000005, 28.513013333333333], [40.72803666666666, 28.51200333333333], [40.728031666666666, 28.51147333333333], [40.72804666666666, 28.510953333333337], [40.728195, 28.509856666666668], [40.72821, 28.5093], [40.728396666666654, 28.50731], [40.728433333333335, 28.506806666666662], [40.72850666666666, 28.505831666666666], [40.72861, 28.504705], [40.728613333333335, 28.504175], [40.728615, 28.50365], [40.728615, 28.50365], [40.728665, 28.50313333333333], [40.728746666666666, 28.50172833333333], [40.728766666666665, 28.501225], [40.72879, 28.500716666666666], [40.72881333333333, 28.500213333333328], [40.72889666666666, 28.498591666666663], [40.728950000000005, 28.497565], [40.72899333333333, 28.496648333333333], [40.729018333333336, 28.49614], [40.72904833333334, 28.495635], [40.729073333333325, 28.49513], [40.729145, 28.494018333333333], [40.729198333333336, 28.492965], [40.729198333333336, 28.492965], [40.729298333333325, 28.491473333333328], [40.72942833333333, 28.490381666666668], [40.729476666666656, 28.489311666666666], [40.72955666666667, 28.488785], [40.729670000000006, 28.4882], [40.729825, 28.487216666666665], [40.729885, 28.48679], [40.729885, 28.48679], [40.729976666666666, 28.48630166666667], [40.73009666666666, 28.48582], [40.73015166666666, 28.4853], [40.730235, 28.484796666666668], [40.730308333333326, 28.484303333333333], [40.730446666666666, 28.48212333333333], [40.73048166666667, 28.481696666666668], [40.730535, 28.48117833333333], [40.73059166666666, 28.48065666666667], [40.730715, 28.479685], [40.73074166666667, 28.479155], [40.73078833333333, 28.478665], [40.73107166666667, 28.476096666666667], [40.731295, 28.47458], [40.731395, 28.473655], [40.73149166666667, 28.47300333333333], [40.73163666666667, 28.471935], [40.73175166666666, 28.47100333333333], [40.731945, 28.469901666666665], [40.73203, 28.469481666666663], [40.732138333333324, 28.468988333333336], [40.732256666666665, 28.468488333333333], [40.732391666666665, 28.46791333333333], [40.73251166666667, 28.46742], [40.73260666666666, 28.46701333333333], [40.732726666666665, 28.466518333333333], [40.73283666666667, 28.46602833333333], [40.732948333333326, 28.465535], [40.73327333333334, 28.464078333333337], [40.73327333333334, 28.464078333333337], [40.73349833333334, 28.463013333333333], [40.733783333333335, 28.461641666666665], [40.733888333333326, 28.46115166666667], [40.733991666666654, 28.460653333333333], [40.734116666666665, 28.46007333333333], [40.73445, 28.45858666666667], [40.73455333333333, 28.45809833333333], [40.73474, 28.45719], [40.73484, 28.45669], [40.734936666666655, 28.45619], [40.735038333333335, 28.455681666666667], [40.735155, 28.45516], [40.735443333333336, 28.45363833333333], [40.73578166666666, 28.45230833333333], [40.73592666666666, 28.451843333333333], [40.73611666666666, 28.451288333333327], [40.73627166666667, 28.45087333333333], [40.73642, 28.4504], [40.736818333333325, 28.448805], [40.736936666666665, 28.44836833333333], [40.73735166666666, 28.446495], [40.73746166666666, 28.446075], [40.737586666666665, 28.44556833333333], [40.737755, 28.44489], [40.73787, 28.444431666666667], [40.738025, 28.443816666666667], [40.738256666666665, 28.44282833333333], [40.738256666666665, 28.44282833333333], [40.73835166666667, 28.44245], [40.738478333333326, 28.441961666666668], [40.738641666666666, 28.44138], [40.73896666666667, 28.43993333333333], [40.73918166666667, 28.438986666666665], [40.739211666666655, 28.438816666666664], [40.73929833333333, 28.438223333333333], [40.73938833333333, 28.437406666666668], [40.739405000000005, 28.437246666666667], [40.739423333333335, 28.43708666666667], [40.739436666666656, 28.436925], [40.73945333333334, 28.436763333333328], [40.739475, 28.436515], [40.73958, 28.43501333333333], [40.739601666666665, 28.434598333333334], [40.739628333333336, 28.43349], [40.739706666666656, 28.43184], [40.73986166666667, 28.429968333333328], [40.74005666666666, 28.427446666666665], [40.74012833333334, 28.42651833333333], [40.74024833333333, 28.42492833333333], [40.740278333333336, 28.424506666666662], [40.74030833333334, 28.424076666666668], [40.74031, 28.423906666666667], [40.740363333333335, 28.42332333333333], [40.740595, 28.42042], [40.740725, 28.419046666666667], [40.74086833333333, 28.417335], [40.74099833333333, 28.415735], [40.74112, 28.413938333333327], [40.74126666666666, 28.412265], [40.74133, 28.41151333333333], [40.74133, 28.41151333333333], [40.741361666666656, 28.41065833333333], [40.74138666666667, 28.409745], [40.74140166666666, 28.40889], [40.74138333333334, 28.407223333333327], [40.741371666666666, 28.406481666666664], [40.741326666666666, 28.404766666666667], [40.7413, 28.403938333333333], [40.7413, 28.402293333333333], [40.741326666666666, 28.401571666666666], [40.741326666666666, 28.401571666666666], [40.74133833333334, 28.400765], [40.74133333333334, 28.39982833333333], [40.741326666666666, 28.398241666666667], [40.741326666666666, 28.398241666666667], [40.741315, 28.39745], [40.74127, 28.39584], [40.741236666666666, 28.39492333333333], [40.74122333333333, 28.393408333333333], [40.74119333333333, 28.39258333333333], [40.741191666666666, 28.390961666666666], [40.74117666666666, 28.38927333333333], [40.74118, 28.38856], [40.741155000000006, 28.387735000000003], [40.74112, 28.38613], [40.74104333333333, 28.384355000000003], [40.74104333333333, 28.383636666666668], [40.74104333333333, 28.382806666666667], [40.74101, 28.38194333333333], [40.741020000000006, 28.380335], [40.74104333333333, 28.379423333333328], [40.741055, 28.378685], [40.741055, 28.378685], [40.741075, 28.376946666666665], [40.741005, 28.37451833333333], [40.74096166666666, 28.373725], [40.74095166666666, 28.372985000000003], [40.74090666666667, 28.372081666666663], [40.74088833333334, 28.369641666666663], [40.74087833333333, 28.368831666666665], [40.74087833333333, 28.368831666666665], [40.740865, 28.368021666666667], [40.740848333333325, 28.36648333333333], [40.740835, 28.365601666666667], [40.740831666666665, 28.3648], [40.74082166666666, 28.363993333333333], [40.74079833333334, 28.362441666666665], [40.740781666666656, 28.361633333333334], [40.740766666666666, 28.36074166666667], [40.740748333333336, 28.35993833333333], [40.74072666666667, 28.35914166666667], [40.74071, 28.35831166666667], [40.74068166666667, 28.357568333333333], [40.74066333333334, 28.35675], [40.74065666666667, 28.355846666666665], [40.740651666666665, 28.355028333333333], [40.740741666666665, 28.352696666666667], [40.740755, 28.351886666666665], [40.74077833333333, 28.35099333333333], [40.740791666666674, 28.350131666666663], [40.740831666666665, 28.348441666666663], [40.740831666666665, 28.347725], [40.740831666666665, 28.34692], [40.740845, 28.346035], [40.74086166666667, 28.34522833333333], [40.74090833333333, 28.343571666666666], [40.74091666666666, 28.34284], [40.74091666666666, 28.342021666666668], [40.74091666666666, 28.341145], [40.740905, 28.340355], [40.74081833333333, 28.33865], [40.740855, 28.337948333333333], [40.740911666666655, 28.337181666666662], [40.74096, 28.33629833333333], [40.741, 28.335486666666668], [40.74106, 28.333845], [40.741085, 28.33311666666667], [40.741101666666665, 28.33228], [40.741128333333336, 28.33053], [40.741146666666666, 28.328886666666666], [40.741146666666666, 28.328886666666666], [40.741155000000006, 28.328143333333333], [40.741163333333326, 28.32731833333333], [40.74116166666667, 28.32642666666667], [40.741163333333326, 28.324815], [40.741165, 28.324008333333328], [40.741165, 28.324008333333328], [40.741098333333326, 28.32164333333333], [40.74108, 28.320116666666667], [40.741095, 28.319225], [40.74105, 28.318418333333334], [40.74105, 28.318418333333334], [40.74115, 28.31766333333333], [40.74108666666666, 28.31436666666667], [40.741143333333326, 28.31352333333333], [40.741143333333326, 28.31352333333333], [40.74122333333333, 28.312761666666667], [40.741215, 28.311873333333327], [40.7413, 28.31104], [40.74137833333334, 28.309378333333328], [40.74137833333334, 28.309378333333328], [40.741393333333335, 28.308568333333334], [40.741408333333325, 28.307828333333337], [40.741393333333335, 28.30695], [40.741435, 28.306123333333336], [40.74146, 28.304503333333333], [40.74151, 28.30369166666667], [40.741645, 28.30055], [40.741645, 28.30055], [40.741675, 28.298821666666665], [40.741723333333326, 28.297203333333336], [40.741781666666654, 28.295673333333333], [40.741798333333335, 28.29485333333333], [40.74180833333333, 28.29397], [40.74183166666667, 28.29242], [40.741825, 28.291541666666667], [40.74202666666666, 28.28749], [40.742221666666666, 28.28432666666667], [40.742335, 28.282625], [40.742536666666666, 28.27951333333333], [40.74257833333333, 28.278693333333333], [40.74267, 28.276965], [40.742795, 28.274665], [40.74285, 28.273865], [40.742975, 28.272158333333334], [40.743108333333325, 28.26980166666667], [40.743143333333336, 28.26899333333333], [40.74318, 28.26818666666667], [40.743221666666656, 28.267305], [40.74335333333333, 28.264966666666663], [40.74340166666666, 28.264161666666663], [40.74345, 28.263351666666665], [40.74350666666666, 28.262451666666667], [40.74355166666666, 28.261713333333333], [40.74360166666667, 28.260898333333333], [40.74373, 28.258468333333333], [40.743783333333326, 28.25757666666667], [40.743831666666665, 28.25685333333333], [40.743891666666656, 28.25604666666667], [40.744071666666656, 28.25363666666667], [40.74414, 28.252755], [40.744245, 28.251225], [40.74434833333333, 28.249536666666664], [40.74434833333333, 28.249536666666664], [40.744391666666665, 28.248813333333327], [40.74444, 28.247936666666664], [40.744498333333325, 28.246393333333334], [40.74454166666667, 28.245581666666663], [40.74462333333334, 28.244706666666666], [40.74487166666666, 28.24313], [40.745005, 28.242415], [40.74518, 28.241555], [40.745493333333336, 28.24], [40.74563166666666, 28.23929833333333], [40.745795, 28.238435], [40.74591833333333, 28.23772333333333], [40.74606333333334, 28.236858333333327], [40.746355, 28.2353], [40.74658333333333, 28.23405333333333], [40.746655, 28.23373666666667], [40.74677333333333, 28.233251666666668], [40.74684166666666, 28.233016666666668], [40.746945, 28.232713333333333], [40.747031666666665, 28.232491666666665], [40.747150000000005, 28.232201666666665], [40.74741333333333, 28.231551666666668], [40.747505, 28.231336666666667], [40.74764, 28.231058333333333], [40.747763333333324, 28.230786666666667], [40.748025, 28.230396666666664], [40.748685, 28.229655], [40.74897, 28.22939833333333], [40.7492, 28.22923666666667], [40.74937166666666, 28.229121666666668], [40.749895, 28.22882], [40.75013, 28.22869166666667], [40.75030833333334, 28.2286], [40.75048833333334, 28.228516666666668], [40.75073, 28.228411666666663], [40.752205, 28.22793833333333], [40.753518333333325, 28.227578333333334], [40.75409666666666, 28.227408333333337], [40.75473, 28.227246666666662], [40.75588666666666, 28.22692], [40.75608166666667, 28.22686666666667], [40.756275, 28.22681], [40.75705333333334, 28.22656333333333], [40.757378333333335, 28.226451666666662], [40.757445, 28.226433333333333], [40.758291666666665, 28.226186666666667], [40.759011666666666, 28.22599333333333], [40.75940666666667, 28.225863333333333], [40.75979333333333, 28.225735], [40.760176666666666, 28.225601666666662], [40.76094666666666, 28.225303333333333], [40.76133166666667, 28.22515], [40.762166666666666, 28.224806666666662], [40.762875, 28.224515], [40.76326166666667, 28.224361666666667], [40.76365166666666, 28.224206666666664], [40.764045, 28.224055], [40.76483333333333, 28.223748333333333], [40.765235, 28.223595], [40.76610333333333, 28.22327333333333], [40.76684333333333, 28.22300166666667], [40.76724166666667, 28.222858333333328], [40.767645, 28.22271], [40.76804333333334, 28.222561666666664], [40.76884333333333, 28.22225166666667], [40.769241666666666, 28.22208833333333], [40.77083666666666, 28.221478333333334], [40.77123666666667, 28.221325], [40.77202166666667, 28.220991666666663], [40.77274, 28.22067666666667], [40.773136666666666, 28.220545], [40.773336666666665, 28.22049], [40.774223333333325, 28.220296666666663], [40.77484333333334, 28.220213333333334], [40.77498, 28.220196666666663], [40.77511666666666, 28.220186666666667], [40.775461666666665, 28.220176666666667], [40.77559833333333, 28.220171666666666], [40.7769, 28.22014666666667], [40.777725, 28.22014], [40.77896833333333, 28.220105], [40.77938, 28.220090000000003], [40.779795, 28.220076666666667], [40.78103, 28.22000166666667], [40.781445, 28.219978333333334], [40.78186, 28.219955], [40.783113333333326, 28.219876666666668], [40.78352833333334, 28.219855], [40.783948333333335, 28.219833333333334], [40.78437, 28.219811666666665], [40.78478833333334, 28.219791666666666], [40.78520666666667, 28.219771666666663], [40.78604666666667, 28.21973833333333], [40.786948333333335, 28.219701666666666], [40.78812666666667, 28.219665000000003], [40.788538333333335, 28.219653333333333], [40.788955, 28.219646666666662], [40.78937, 28.21964], [40.790198333333336, 28.21963], [40.790688333333335, 28.219626666666667], [40.791525, 28.219611666666665], [40.79229, 28.219601666666662], [40.79270833333333, 28.219601666666662], [40.79354166666667, 28.21959333333333], [40.79527666666667, 28.219573333333337], [40.79604, 28.219566666666665], [40.79604, 28.219566666666665], [40.79645666666667, 28.21955833333333], [40.796875, 28.219556666666666], [40.797365, 28.219545], [40.79771333333333, 28.219538333333333], [40.80022666666667, 28.219518333333333], [40.80022666666667, 28.219518333333333], [40.800645, 28.21952], [40.801063333333325, 28.219536666666663], [40.801905000000005, 28.219616666666663], [40.804415, 28.22006333333333], [40.80524666666666, 28.220201666666664], [40.80690666666667, 28.220405000000003], [40.8078, 28.22053], [40.808993333333326, 28.220671666666664], [40.80989, 28.220795], [40.810648333333326, 28.220896666666665], [40.81106166666667, 28.22095333333333], [40.81273166666666, 28.22118833333333], [40.814475, 28.221393333333328], [40.81524666666667, 28.221476666666668], [40.815663333333326, 28.221523333333334], [40.81615, 28.22160333333333], [40.816923333333335, 28.22174], [40.81783666666667, 28.221926666666665], [40.818650000000005, 28.222005000000003], [40.819406666666666, 28.22209833333333], [40.8203, 28.222241666666665], [40.8203, 28.222241666666665], [40.821053333333325, 28.22236333333333], [40.822381666666665, 28.222541666666665], [40.822786666666666, 28.222591666666663], [40.82353166666666, 28.22269333333333], [40.82443166666666, 28.22282], [40.82443166666666, 28.22282], [40.82521333333333, 28.22291166666667], [40.825635000000005, 28.22297], [40.82653666666666, 28.223101666666665], [40.826951666666666, 28.223175], [40.8273, 28.223236666666665], [40.82895833333334, 28.223435], [40.83027166666666, 28.22348333333333], [40.83109666666667, 28.223486666666663], [40.83312, 28.223525], [40.83353, 28.22347333333333], [40.8344, 28.22333], [40.835188333333335, 28.223165], [40.835188333333335, 28.223165], [40.83591666666667, 28.222985], [40.83676333333334, 28.222801666666665], [40.837491666666665, 28.22261333333333], [40.839881666666656, 28.221948333333334], [40.840741666666666, 28.221768333333333], [40.840741666666666, 28.221768333333333], [40.84148, 28.22161], [40.843066666666665, 28.220996666666668], [40.84338, 28.22085666666667], [40.84412, 28.220466666666667], [40.84455333333334, 28.220235], [40.84486666666666, 28.220068333333334], [40.84524, 28.21987], [40.845613333333326, 28.219671666666667], [40.84643166666666, 28.21924166666667], [40.846815, 28.219051666666665], [40.84751000000001, 28.21872], [40.84834, 28.218316666666663], [40.84866, 28.218141666666668], [40.849050000000005, 28.21793333333333], [40.84989166666666, 28.217561666666665], [40.850665000000006, 28.217215], [40.850985, 28.217065], [40.851758333333336, 28.216706666666667], [40.85221, 28.216495], [40.85291666666667, 28.216158333333333], [40.85330333333333, 28.215968333333333], [40.85561333333333, 28.214848333333336], [40.856388333333335, 28.214481666666664], [40.85716833333333, 28.21410333333333], [40.85795, 28.21382833333333], [40.85832166666666, 28.213621666666665], [40.85869, 28.2134], [40.858811666666654, 28.213325], [40.859051666666666, 28.21316333333333], [40.85928666666666, 28.212991666666667], [40.85928666666666, 28.212991666666667], [40.85963166666667, 28.212735], [40.85974833333333, 28.21264833333333], [40.85997833333333, 28.212476666666664], [40.860095, 28.212388333333333], [40.860455, 28.212136666666662], [40.86082833333333, 28.211895], [40.86165333333334, 28.211268333333333], [40.86175833333333, 28.211166666666667], [40.862055000000005, 28.210833333333333], [40.86214833333334, 28.21072333333333], [40.86238333333333, 28.21045], [40.86299, 28.20982833333333], [40.86323166666667, 28.209563333333328], [40.863425, 28.209333333333333], [40.863518333333325, 28.209213333333327], [40.863761666666655, 28.208838333333333], [40.86391666666666, 28.208581666666664], [40.86423, 28.20804833333333], [40.864303333333325, 28.207911666666668], [40.86462166666667, 28.20729833333333], [40.86531, 28.20582333333333], [40.865511666666656, 28.205405], [40.86617, 28.203646666666668], [40.866633333333326, 28.202221666666667], [40.86685, 28.20136666666667], [40.86710166666667, 28.199936666666662], [40.867176666666666, 28.19945333333333], [40.86725166666666, 28.198888333333333], [40.867465, 28.197006666666667], [40.86768666666667, 28.19501166666667], [40.86786833333333, 28.193765], [40.868113333333326, 28.1921], [40.86918, 28.186361666666667], [40.86934166666666, 28.185521666666663], [40.869661666666666, 28.183763333333328], [40.86983, 28.18284333333333], [40.86997, 28.18209], [40.87037, 28.179823333333328], [40.870665, 28.178233333333328], [40.87096833333333, 28.17672], [40.87121666666666, 28.17528], [40.871415, 28.174253333333336], [40.87171, 28.17271], [40.87192666666667, 28.171601666666668], [40.87221, 28.170165], [40.8723, 28.169665], [40.8723, 28.169665], [40.872688333333336, 28.167661666666667], [40.872908333333335, 28.166571666666663], [40.87329, 28.164633333333327], [40.87329, 28.164633333333327], [40.873773333333325, 28.161988333333333], [40.873961666666666, 28.16097166666667], [40.87411833333333, 28.160031666666665], [40.874223333333326, 28.159513333333333], [40.87432333333334, 28.159001666666665], [40.874526666666654, 28.1579], [40.87470833333334, 28.156901666666663], [40.87470833333334, 28.156901666666663], [40.87480833333333, 28.1564], [40.875165, 28.154488333333333], [40.87525666666667, 28.153993333333336], [40.87537, 28.153405000000003], [40.87571666666666, 28.151881666666668], [40.875826666666654, 28.151375], [40.87611666666666, 28.14994], [40.876213333333325, 28.149428333333333], [40.876295, 28.14892833333333], [40.87656666666666, 28.147408333333328], [40.876663333333326, 28.14690166666667], [40.87706833333333, 28.14483166666667], [40.87715166666667, 28.14442], [40.877255, 28.143915], [40.877488333333325, 28.142818333333327], [40.877590000000005, 28.14231833333333], [40.877795, 28.141305], [40.878101666666666, 28.13977], [40.8782, 28.139265], [40.87827833333333, 28.13884], [40.87877833333334, 28.13629], [40.87898666666667, 28.135296666666665], [40.87910166666666, 28.134786666666667], [40.87930833333333, 28.133855], [40.87962166666667, 28.13226833333333], [40.87971, 28.131846666666668], [40.87984166666667, 28.131253333333333], [40.88005166666667, 28.130241666666667], [40.88031, 28.128823333333333], [40.880415, 28.12824], [40.88048333333334, 28.127821666666662], [40.88074666666667, 28.126216666666668], [40.88092166666667, 28.125201666666666], [40.88116, 28.123763333333333], [40.88126, 28.12316], [40.88133166666666, 28.122726666666665], [40.881415, 28.122148333333328], [40.881473333333325, 28.121736666666667], [40.88169333333334, 28.120215], [40.881906666666666, 28.11870333333333], [40.88199166666666, 28.118111666666668], [40.88205333333334, 28.117686666666668], [40.882126666666665, 28.11717833333333], [40.88232333333334, 28.116073333333336], [40.882533333333335, 28.11453833333333], [40.88268166666667, 28.113585], [40.88276333333333, 28.112981666666663], [40.882825, 28.112548333333333], [40.88298, 28.111428333333333], [40.883105, 28.110485], [40.883171666666655, 28.109976666666668], [40.88333, 28.108925], [40.88333, 28.108925], [40.883405, 28.108411666666665], [40.883486666666656, 28.10790833333333], [40.884003333333325, 28.104786666666666], [40.884165, 28.1038], [40.88431166666666, 28.102731666666667], [40.884383333333325, 28.102228333333336], [40.88463, 28.100713333333328], [40.88477833333333, 28.099755], [40.884935000000006, 28.09871833333333], [40.88509333333333, 28.09761], [40.88515833333334, 28.097111666666667], [40.885396666666665, 28.09558333333333], [40.885533333333335, 28.094636666666663], [40.88570666666667, 28.093603333333327], [40.88570666666667, 28.093603333333327], [40.88581166666666, 28.093101666666666], [40.885895, 28.092571666666668], [40.885895, 28.092571666666668], [40.88629, 28.09042], [40.886406666666666, 28.089446666666667], [40.88654, 28.088405], [40.88654, 28.088405], [40.88659, 28.087898333333328], [40.88674833333334, 28.08629833333333], [40.88684166666666, 28.085281666666667], [40.88688666666666, 28.08485166666667], [40.886943333333335, 28.084333333333333], [40.88699833333333, 28.083815], [40.887058333333336, 28.083291666666664], [40.887175, 28.082246666666663], [40.887248333333325, 28.081636666666668], [40.88731666666667, 28.08111166666667], [40.887375, 28.08068], [40.887458333333335, 28.08007333333333], [40.88751166666666, 28.07964833333333], [40.8877, 28.078116666666663], [40.88776, 28.077601666666663], [40.887985, 28.075548333333334], [40.88805166666666, 28.074946666666666], [40.88809666666666, 28.07452], [40.888153333333335, 28.073998333333336], [40.888205, 28.073476666666668], [40.8885, 28.07076333333333], [40.888545, 28.070328333333336], [40.888596666666665, 28.069801666666667], [40.88880166666667, 28.067606666666663], [40.88884166666666, 28.06717], [40.88894166666666, 28.06612], [40.88899666666667, 28.065506666666668], [40.88909, 28.064541666666667], [40.889243333333326, 28.06296], [40.889291666666665, 28.062363333333334], [40.889418333333325, 28.06129], [40.88947, 28.060838333333333], [40.88951833333333, 28.060243333333336], [40.88961666666666, 28.059281666666667], [40.889965, 28.056015], [40.890006666666665, 28.055576666666663], [40.89006333333334, 28.05495], [40.890138333333326, 28.05399833333333], [40.89032666666667, 28.0518], [40.89043, 28.050725], [40.89043, 28.050725], [40.89056, 28.049646666666668], [40.890755, 28.04805], [40.89091166666665, 28.047033333333328], [40.891, 28.046405], [40.891303333333326, 28.04431], [40.891303333333326, 28.04431], [40.89173666666667, 28.041155], [40.89187833333334, 28.04013833333333], [40.89201166666666, 28.03908], [40.89201166666666, 28.03908], [40.89222166666666, 28.037365], [40.89243333333333, 28.03578666666667], [40.89243333333333, 28.03578666666667], [40.89255833333333, 28.03471833333333], [40.8927, 28.033661666666667], [40.8927, 28.033661666666667], [40.892855, 28.032635000000003], [40.89313666666667, 28.0305], [40.89324, 28.02940166666667], [40.893366666666665, 28.02839], [40.893485000000005, 28.02734], [40.89355833333333, 28.02671666666667], [40.89377, 28.02511833333333], [40.89377, 28.02511833333333], [40.89390333333333, 28.024051666666665], [40.89429833333334, 28.02090833333333], [40.89445166666666, 28.019731666666665], [40.89497, 28.015523333333327], [40.895136666666666, 28.014356666666668], [40.89528666666667, 28.01329666666667], [40.89542666666667, 28.01229333333333], [40.89557166666666, 28.01113333333333], [40.89573833333333, 28.009646666666665], [40.89581333333333, 28.009001666666663], [40.89594833333333, 28.007913333333327], [40.89607166666666, 28.00693833333333], [40.896313333333325, 28.005211666666664], [40.89653333333333, 28.00368], [40.896635, 28.003025], [40.89671, 28.002483333333327], [40.897185, 27.998335], [40.897315000000006, 27.99714], [40.897575, 27.994948333333333], [40.897688333333335, 27.99395833333333], [40.897838333333326, 27.992866666666664], [40.89792333333333, 27.99225333333333], [40.89799833333333, 27.991721666666667], [40.898575, 27.987538333333337], [40.89961666666667, 27.97882], [40.89982166666666, 27.977263333333333], [40.89985833333333, 27.97671666666667], [40.90011666666666, 27.97443666666667], [40.900411666666656, 27.972378333333328], [40.90056333333334, 27.9713], [40.90069333333334, 27.970231666666667], [40.901230000000005, 27.965796666666662], [40.901325, 27.964811666666662], [40.901465, 27.963653333333333], [40.901795, 27.961488333333328], [40.901935, 27.960435], [40.90209166666667, 27.95944833333333], [40.902278333333335, 27.958281666666668], [40.902621666666654, 27.956145], [40.90281, 27.9551], [40.90297, 27.95401833333333], [40.9035, 27.95073], [40.903635, 27.949645], [40.903785, 27.948561666666667], [40.90395, 27.947501666666668], [40.90429, 27.945345], [40.90445666666666, 27.944288333333336], [40.90507333333333, 27.93993333333333], [40.90519333333334, 27.938861666666664], [40.90539, 27.937765], [40.90584833333333, 27.934725], [40.90617833333333, 27.932458333333333], [40.90633666666666, 27.931381666666667], [40.906811666666655, 27.928145], [40.907, 27.92693833333333], [40.90716166666667, 27.925925], [40.907336666666666, 27.92482833333333], [40.90749166666667, 27.923826666666667], [40.90765666666666, 27.922708333333333], [40.90782166666667, 27.921611666666667], [40.908135, 27.91934], [40.90844166666666, 27.917286666666666], [40.90860666666666, 27.916211666666666], [40.908945, 27.913975], [40.90909, 27.912993333333336], [40.90941166666666, 27.91083833333333], [40.90958333333333, 27.909685000000003], [40.90973333333333, 27.908616666666667], [40.909865, 27.90762], [40.91002, 27.906448333333334], [40.910245, 27.904816666666665], [40.910488333333326, 27.90319], [40.91097166666666, 27.90005], [40.91130333333333, 27.897820000000003], [40.91146666666666, 27.896736666666666], [40.91173166666666, 27.894598333333327], [40.91195833333334, 27.89245333333333], [40.912098333333326, 27.89138], [40.912425, 27.889231666666667], [40.912903333333325, 27.886033333333334], [40.913183333333336, 27.8839], [40.91330166666666, 27.88280333333333], [40.91355, 27.88063333333333], [40.91384, 27.878498333333333], [40.91458, 27.87316], [40.91471, 27.87208833333333], [40.91514666666667, 27.86888833333333], [40.91543, 27.866765], [40.91556, 27.86569833333333], [40.915813333333325, 27.863665], [40.915975, 27.862515], [40.916266666666665, 27.860395], [40.916528333333325, 27.858353333333334], [40.91668666666667, 27.857186666666667], [40.917125000000006, 27.85181], [40.917175, 27.848556666666664], [40.917188333333335, 27.847561666666664], [40.91721666666666, 27.846381666666662], [40.91723, 27.845385], [40.91730166666667, 27.84211833333333], [40.917338333333326, 27.840926666666668], [40.917385, 27.839838333333333], [40.91745333333333, 27.836693333333336], [40.91749166666667, 27.835528333333333], [40.917513333333325, 27.83445], [40.91757333333333, 27.83131], [40.917593333333336, 27.83014166666667], [40.917615, 27.82905833333333], [40.91769666666666, 27.826873333333328], [40.91776, 27.824711666666666], [40.91777833333333, 27.823646666666665], [40.91780166666666, 27.82150833333333], [40.917813333333335, 27.82052666666667], [40.91784333333333, 27.819328333333328], [40.91786833333333, 27.818256666666667], [40.917955, 27.816041666666667], [40.91795833333333, 27.81512], [40.91800333333333, 27.81292333333333], [40.91803, 27.811833333333333], [40.91804833333333, 27.81082333333333], [40.918083333333335, 27.808508333333336], [40.91809166666666, 27.807403333333333], [40.91813333333334, 27.80536], [40.91816333333334, 27.804305], [40.91823, 27.80208333333333], [40.91829333333333, 27.798963333333333], [40.91831666666666, 27.797801666666665], [40.918373333333335, 27.79565833333333], [40.91841, 27.794653333333333], [40.91846833333333, 27.792415], [40.918506666666666, 27.790251666666663], [40.918533333333336, 27.78923166666667], [40.918585, 27.786951666666667], [40.91860333333333, 27.785965], [40.918675, 27.783821666666665], [40.91873833333333, 27.782758333333334], [40.91880166666667, 27.781611666666667], [40.91885166666666, 27.78064333333333], [40.91893166666667, 27.779046666666662], [40.918951666666665, 27.778513333333333], [40.91898166666667, 27.77745666666667], [40.919095, 27.775305], [40.91919, 27.774145], [40.919415, 27.771475], [40.919473333333336, 27.77095166666667], [40.91957, 27.769975], [40.91966, 27.768821666666668], [40.91975166666667, 27.76784333333333], [40.91980333333333, 27.767311666666668], [40.919851666666666, 27.766775], [40.919955, 27.765605], [40.92003833333333, 27.764603333333334], [40.920131666666656, 27.763451666666665], [40.92021, 27.762518333333333], [40.920313333333326, 27.76140333333333], [40.920406666666665, 27.760266666666663], [40.92046666666667, 27.759348333333328], [40.920503333333336, 27.758825], [40.920825, 27.75489], [40.921028333333325, 27.752885], [40.921171666666666, 27.751855], [40.921283333333335, 27.75080833333333], [40.92164666666666, 27.74652], [40.921731666666666, 27.745456666666666], [40.922125, 27.74119333333333], [40.922215, 27.740113333333333], [40.922305, 27.73903], [40.92242333333333, 27.73789833333333], [40.922616666666656, 27.73587], [40.922778333333326, 27.733728333333328], [40.92288333333333, 27.732578333333333], [40.92298, 27.731606666666668], [40.923063333333324, 27.730515], [40.92320166666666, 27.729476666666667], [40.92330333333334, 27.728431666666665], [40.923375, 27.727285], [40.923496666666665, 27.726271666666666], [40.923871666666656, 27.722045], [40.923916666666656, 27.72149333333333], [40.924008333333326, 27.72041833333333], [40.92428, 27.718196666666664], [40.92455833333334, 27.716185], [40.924708333333335, 27.71514], [40.92485166666666, 27.714078333333337], [40.92497166666667, 27.712911666666667], [40.925266666666666, 27.71088166666667], [40.92549, 27.708751666666668], [40.92560833333334, 27.707598333333333], [40.925843333333326, 27.705498333333328], [40.92600333333333, 27.70445], [40.92612833333333, 27.70344], [40.926386666666666, 27.70127833333333], [40.92710833333333, 27.695978333333336], [40.92907666666667, 27.68724333333333], [40.929296666666666, 27.686203333333328], [40.9295, 27.68517166666667], [40.9297, 27.68405166666667], [40.92977833333334, 27.68361833333333], [40.93027833333333, 27.68097333333333], [40.93049333333333, 27.67982], [40.93089166666666, 27.67771], [40.930976666666666, 27.67727], [40.931085, 27.676741666666665], [40.931193333333326, 27.67621666666667], [40.931666666666665, 27.67400333333333], [40.93186166666667, 27.673056666666664], [40.93221666666666, 27.671395], [40.932313333333326, 27.670956666666665], [40.93241833333333, 27.670443333333328], [40.93265, 27.669320000000003], [40.932835, 27.668353333333336], [40.93304166666666, 27.66722], [40.93323166666666, 27.666173333333333], [40.933315, 27.66573333333333], [40.93342, 27.66521], [40.933546666666665, 27.664585], [40.93373833333333, 27.66362], [40.933825, 27.663105], [40.93392333333334, 27.66258], [40.93426333333333, 27.66089333333333], [40.93435333333333, 27.660448333333328], [40.934456666666655, 27.659918333333334], [40.934576666666665, 27.6593], [40.934756666666665, 27.658353333333327], [40.934938333333335, 27.657285], [40.93520166666666, 27.656145], [40.93542, 27.655191666666667], [40.935678333333335, 27.654051666666664], [40.93588666666666, 27.653095], [40.9361, 27.65205333333333], [40.93651, 27.64996], [40.93673, 27.648821666666667], [40.93711166666667, 27.64682], [40.937323333333325, 27.645766666666667], [40.93753333333333, 27.644726666666667], [40.937775, 27.6436], [40.93798833333334, 27.64264166666667], [40.938218333333324, 27.6416], [40.93844166666667, 27.64056], [40.938668333333325, 27.639513333333333], [40.939015000000005, 27.63784], [40.939105000000005, 27.637398333333334], [40.939303333333335, 27.636343333333333], [40.93949, 27.63530833333333], [40.93973, 27.63417666666667], [40.93994, 27.633135], [40.94038166666667, 27.631118333333333], [40.940603333333335, 27.63008166666667], [40.94084833333333, 27.628958333333333], [40.94107833333333, 27.627918333333334], [40.941738333333326, 27.62484], [40.94195333333333, 27.623715], [40.942338333333325, 27.621638333333333], [40.942530000000005, 27.62067], [40.942735, 27.61962], [40.942995, 27.618475], [40.943458333333325, 27.61640833333333], [40.94369, 27.61544], [40.944175, 27.613186666666664], [40.94495666666667, 27.609203333333333], [40.94572166666667, 27.605601666666665], [40.945998333333335, 27.604051666666667], [40.946095, 27.60344], [40.94615833333333, 27.603006666666666], [40.946325, 27.601861666666665], [40.946475, 27.600885], [40.946646666666666, 27.599815], [40.946818333333326, 27.598756666666667], [40.94691666666667, 27.598141666666667], [40.946998333333326, 27.59770166666667], [40.9472, 27.596668333333334], [40.947388333333336, 27.595635], [40.94749, 27.59509333333333], [40.947581666666665, 27.594575000000003], [40.94778166666666, 27.5934], [40.94815833333334, 27.590791666666668], [40.948305, 27.589796666666665], [40.94839, 27.58928333333333], [40.94856833333333, 27.58827], [40.948678333333326, 27.58767], [40.94876, 27.587248333333328], [40.94893666666666, 27.58629], [40.94908, 27.58536], [40.94941333333334, 27.58355], [40.949568333333325, 27.582688333333333], [40.94970833333333, 27.58181666666667], [40.94999666666667, 27.5801], [40.950128333333325, 27.57924833333333], [40.95038, 27.577741666666668], [40.950508333333325, 27.576983333333327], [40.95105, 27.573978333333333], [40.951135, 27.57323166666667], [40.95126666666666, 27.572503333333334], [40.951798333333336, 27.56913666666667], [40.95189166666666, 27.568678333333327], [40.951975, 27.568226666666664], [40.95212833333333, 27.56741], [40.95221833333333, 27.56690833333333], [40.95229500000001, 27.56646333333333], [40.95244833333334, 27.5656], [40.952593333333326, 27.564791666666668], [40.95274833333334, 27.56391], [40.953056666666654, 27.561671666666665], [40.95310333333334, 27.561326666666663], [40.953163333333336, 27.56098], [40.95322333333333, 27.56064], [40.95329166666667, 27.56033833333333], [40.95349833333333, 27.559533333333327], [40.95367333333333, 27.559025], [40.953755, 27.558811666666667], [40.953861666666654, 27.55858333333333], [40.954085, 27.558136666666663], [40.95433166666666, 27.557616666666668], [40.95457, 27.557115], [40.95480166666666, 27.556663333333333], [40.95499333333333, 27.556191666666667], [40.955211666666656, 27.555745], [40.955355, 27.555468333333334], [40.95545166666666, 27.555286666666667], [40.95558833333334, 27.55501], [40.955686666666665, 27.554793333333336], [40.955895000000005, 27.554353333333328], [40.956115, 27.55391], [40.95625166666667, 27.553663333333336], [40.95636666666666, 27.553458333333328], [40.956475, 27.55326], [40.95657166666666, 27.553095], [40.95679833333334, 27.55268833333333], [40.957048333333326, 27.55224], [40.95717833333333, 27.552043333333334], [40.957753333333336, 27.55099333333333], [40.957945, 27.550665], [40.958185, 27.550256666666662], [40.95840333333333, 27.549835], [40.95860166666667, 27.549446666666665], [40.958813333333325, 27.549028333333336], [40.95903166666666, 27.54858], [40.95922166666666, 27.54817], [40.95958, 27.547428333333336], [40.959765, 27.547043333333328], [40.9599, 27.546736666666668], [40.960093333333326, 27.54643], [40.96021833333334, 27.54613], [40.960335, 27.545846666666662], [40.960455, 27.545655], [40.960548333333335, 27.54545], [40.960655, 27.545306666666665], [40.960726666666666, 27.545196666666666], [40.96080666666667, 27.545105], [40.96084166666667, 27.54505333333333], [40.960875, 27.54505333333333], [40.96089666666667, 27.545056666666667], [40.96092, 27.54505], [40.96094666666667, 27.54502666666667], [40.96095666666666, 27.545008333333328], [40.96095, 27.54493666666667], [40.96096833333333, 27.544993333333327], [40.960995, 27.544985], [40.960895, 27.544998333333336], [40.96094166666667, 27.54493], [40.96094166666667, 27.544955], [40.96094166666667, 27.544956666666668], [40.96092, 27.544963333333328], [40.960855, 27.54502], [40.960805, 27.54511], [40.960756666666654, 27.545168333333333], [40.96070833333333, 27.545213333333333], [40.96066, 27.545276666666663], [40.960655, 27.545331666666662], [40.960636666666666, 27.54536166666667], [40.96061, 27.5454], [40.960548333333335, 27.545466666666663], [40.9605, 27.545501666666667], [40.960516666666656, 27.545468333333336], [40.96055833333333, 27.545393333333333], [40.96064, 27.54528833333333], [40.96068666666666, 27.545201666666667], [40.960681666666666, 27.54519], [40.960746666666665, 27.545083333333327], [40.96084166666667, 27.544925], [40.960895, 27.544796666666667], [40.960998333333336, 27.544653333333333], [40.96104666666666, 27.54459333333333], [40.961095, 27.54448], [40.961125, 27.544441666666668], [40.96113666666666, 27.544425], [40.961151666666666, 27.54441166666667], [40.961251666666655, 27.54419], [40.96127166666666, 27.544201666666662], [40.96128, 27.544273333333333], [40.961275, 27.544308333333333], [40.96127333333333, 27.54434333333333], [40.96126666666667, 27.544403333333328], [40.96123833333333, 27.544455000000003], [40.96127166666666, 27.54451333333333], [40.961295, 27.54459333333333], [40.961295, 27.544735], [40.96127166666666, 27.544851666666663], [40.96127, 27.54495166666667], [40.961263333333335, 27.545081666666665], [40.961275, 27.545171666666665], [40.96132833333333, 27.54525333333333], [40.96135833333334, 27.545351666666665], [40.961371666666665, 27.54537], [40.961386666666655, 27.545393333333333], [40.961400000000005, 27.54541833333333], [40.961413333333326, 27.54544], [40.96142833333333, 27.54546], [40.961455, 27.545475], [40.96146666666667, 27.545478333333328], [40.96149166666667, 27.54549666666667], [40.961508333333335, 27.545503333333333], [40.961545, 27.545468333333336], [40.961533333333335, 27.545235], [40.961506666666665, 27.545225], [40.96145333333333, 27.54519833333333], [40.961365, 27.545165], [40.96129333333333, 27.545111666666667], [40.961223333333336, 27.54508], [40.96112166666667, 27.545065], [40.96103, 27.54505], [40.960925, 27.54502666666667], [40.96080666666667, 27.545], [40.960625, 27.544966666666667], [40.960411666666666, 27.544925], [40.95998333333333, 27.54489], [40.95951, 27.544868333333334], [40.95848, 27.544923333333333], [40.957861666666666, 27.545023333333333], [40.95669833333333, 27.54537], [40.95544, 27.545718333333333], [40.95511833333333, 27.545818333333333], [40.954835, 27.545926666666663], [40.95459166666667, 27.546031666666668], [40.95430833333333, 27.54614], [40.953353333333325, 27.546523333333333], [40.95292, 27.546715], [40.952528333333326, 27.54687833333333], [40.952095, 27.547085], [40.951725, 27.547241666666665], [40.951383333333325, 27.547356666666666], [40.951045, 27.547531666666664], [40.95071, 27.547631666666668], [40.950126666666655, 27.547951666666663], [40.949895, 27.548073333333328], [40.949805, 27.54814], [40.94969666666666, 27.548266666666667], [40.94944666666667, 27.54842], [40.94911166666667, 27.548771666666667], [40.94897, 27.548926666666667], [40.94884166666667, 27.549091666666666], [40.94872333333333, 27.549241666666667], [40.94861333333333, 27.549386666666667], [40.948395, 27.54963], [40.94827, 27.54987333333333], [40.947913333333325, 27.550451666666667], [40.947865, 27.550551666666667], [40.947853333333335, 27.55068], [40.94765833333334, 27.550896666666667], [40.947585, 27.55099333333333], [40.94752833333334, 27.55103], [40.94748666666667, 27.551076666666667], [40.9475, 27.551131666666667], [40.94746, 27.551168333333333], [40.94743666666666, 27.551208333333328], [40.94743833333334, 27.551271666666665], [40.9474, 27.551313333333333], [40.947315, 27.55138333333333], [40.947273333333335, 27.55138833333333], [40.94723333333333, 27.551403333333333], [40.947245, 27.55139833333333], [40.94725, 27.551376666666663], [40.94730333333334, 27.55128], [40.947288333333326, 27.551268333333333], [40.947263333333325, 27.551235], [40.947263333333325, 27.551151666666662], [40.947161666666666, 27.551066666666667], [40.947145, 27.551031666666667], [40.947115, 27.550831666666667], [40.947128333333325, 27.55072333333333], [40.947125, 27.55043333333333], [40.947025, 27.550273333333333], [40.94699, 27.550151666666668], [40.94685166666667, 27.54968333333333], [40.94683333333333, 27.549626666666665], [40.94681166666666, 27.549556666666668], [40.946758333333335, 27.549431666666667], [40.946691666666666, 27.549371666666666], [40.94659833333333, 27.54913833333333], [40.946505, 27.54898833333333], [40.94643833333334, 27.548863333333333], [40.946313333333336, 27.548781666666667], [40.94625833333334, 27.5487], [40.946133333333336, 27.548625], [40.945986666666656, 27.548536666666667], [40.94589333333333, 27.548495], [40.945761666666655, 27.548465], [40.94565833333333, 27.548428333333334], [40.94550666666667, 27.54836], [40.945346666666666, 27.54836833333333], [40.945205, 27.548393333333333], [40.945103333333336, 27.54839], [40.944938333333326, 27.548415], [40.94472833333334, 27.548495], [40.94444833333333, 27.548631666666665], [40.94431333333333, 27.5487], [40.944205, 27.54876], [40.94408, 27.54889166666667], [40.944010000000006, 27.548973333333333], [40.943906666666656, 27.549091666666666], [40.94376833333333, 27.54926833333333], [40.94372333333333, 27.549361666666663], [40.9435, 27.549993333333337], [40.943488333333335, 27.550081666666664], [40.943458333333325, 27.55016], [40.943425000000005, 27.55049333333333], [40.943403333333336, 27.550801666666665], [40.94343166666666, 27.55094], [40.94343666666667, 27.551253333333328], [40.9435, 27.551348333333333], [40.94348166666667, 27.551535], [40.94353, 27.55160833333333], [40.94356333333334, 27.55168], [40.94359, 27.551761666666668], [40.943615, 27.551828333333333], [40.943615, 27.551963333333333], [40.943693333333336, 27.552035], [40.943818333333326, 27.55224666666667], [40.943915, 27.552325], [40.943951666666656, 27.552365], [40.944008333333336, 27.552425000000003], [40.944515, 27.552703333333334], [40.94457166666666, 27.552721666666667], [40.944693333333326, 27.55268], [40.944811666666666, 27.55268], [40.94496333333333, 27.552661666666665], [40.945058333333336, 27.55261], [40.94509666666667, 27.552568333333333], [40.945221666666654, 27.552501666666668], [40.945235, 27.55248], [40.94531666666667, 27.552398333333333], [40.94544333333333, 27.552273333333336], [40.94548, 27.552191666666666], [40.945565, 27.55208], [40.945625, 27.552036666666663], [40.945698333333326, 27.55184333333333], [40.945751666666666, 27.551665], [40.94576333333334, 27.551605], [40.94576333333334, 27.55156333333333], [40.94578333333333, 27.55144], [40.94581166666667, 27.551318333333327], [40.9458, 27.551255], [40.9458, 27.551205], [40.9458, 27.55106], [40.94573666666666, 27.550855], [40.94571, 27.550801666666665], [40.94568, 27.550671666666663], [40.945553333333336, 27.55045], [40.94552333333333, 27.550383333333333], [40.945505, 27.550315], [40.94542166666666, 27.550238333333333], [40.945345, 27.550148333333333], [40.945295, 27.550115], [40.945266666666654, 27.55007], [40.94513333333334, 27.550033333333328], [40.945033333333335, 27.549995000000003], [40.944941666666665, 27.549981666666667], [40.944891666666656, 27.54996333333333], [40.94487, 27.549911666666667], [40.94470666666666, 27.549903333333337], [40.944561666666665, 27.549903333333337], [40.944495, 27.54994], [40.94437333333334, 27.5499], [40.944145000000006, 27.54996333333333], [40.94406, 27.549975], [40.94390333333333, 27.550026666666668], [40.943771666666656, 27.55013333333333], [40.94371666666667, 27.55018], [40.94363, 27.550246666666663], [40.943525, 27.550346666666663], [40.94330166666667, 27.550608333333333], [40.94321833333333, 27.550763333333336], [40.943186666666655, 27.550835], [40.94315666666667, 27.550901666666668], [40.943056666666656, 27.551053333333336], [40.942995, 27.551191666666668], [40.94287, 27.551358333333333], [40.94283666666667, 27.55153], [40.942831666666656, 27.551625], [40.94286833333333, 27.551746666666663], [40.942861666666666, 27.55193166666667], [40.94285, 27.552088333333334], [40.942855, 27.55226833333333], [40.94284, 27.552443333333333], [40.942831666666656, 27.552595], [40.942905, 27.552811666666667], [40.942915, 27.552895], [40.942973333333335, 27.55302333333333], [40.943035, 27.553145], [40.94306666666667, 27.553188333333328], [40.94309166666667, 27.55328833333333], [40.943143333333325, 27.553366666666665], [40.943223333333336, 27.553491666666662], [40.943276666666655, 27.553546666666666], [40.943305, 27.55358833333333], [40.94338333333334, 27.55362833333333], [40.94311833333334, 27.553501666666666], [40.943, 27.553438333333336], [40.942888333333336, 27.55335333333333], [40.94277833333333, 27.553213333333336], [40.942653333333325, 27.553006666666665], [40.94258, 27.552903333333333], [40.942516666666656, 27.552788333333336], [40.942440000000005, 27.55264], [40.942185, 27.55225], [40.94212166666667, 27.552101666666665], [40.942048333333325, 27.551896666666668], [40.94199166666667, 27.55169], [40.94194666666667, 27.55148833333333], [40.941923333333335, 27.5513], [40.941905, 27.55108166666667], [40.941886666666655, 27.550891666666665], [40.94188, 27.550671666666663], [40.94189, 27.550451666666667], [40.94189833333333, 27.550255], [40.94191, 27.55003], [40.941945, 27.549556666666668], [40.942355, 27.5479], [40.94247666666667, 27.54753833333333], [40.943041666666666, 27.546161666666663], [40.94339833333333, 27.54544], [40.94374166666666, 27.544788333333333], [40.944095, 27.54412333333333], [40.94443666666666, 27.543443333333336], [40.94476833333333, 27.542758333333328], [40.945155, 27.54203], [40.94558666666667, 27.541238333333336], [40.94598, 27.54054], [40.94643833333334, 27.539916666666667], [40.946938333333335, 27.53926166666667], [40.94741166666667, 27.538605], [40.947853333333335, 27.53803], [40.94837, 27.53730333333333], [40.94884166666667, 27.536665000000003], [40.94984, 27.53533833333333], [40.950398333333325, 27.534595000000003], [40.950813333333336, 27.534031666666667], [40.951011666666666, 27.533791666666666], [40.951248333333325, 27.533441666666665], [40.95144666666666, 27.53315333333333], [40.952188333333325, 27.53213833333333], [40.95270666666667, 27.531491666666668], [40.953191666666655, 27.530855], [40.954168333333335, 27.529588333333333], [40.95459166666667, 27.52899833333333], [40.95480166666666, 27.528716666666664], [40.95498333333333, 27.528475], [40.95542666666666, 27.527903333333327], [40.955838333333325, 27.527371666666667], [40.956205, 27.526876666666663], [40.956595, 27.52633833333333], [40.957006666666665, 27.525833333333328], [40.957816666666666, 27.524845000000003], [40.95822166666667, 27.524338333333333], [40.95897833333333, 27.52333], [40.95933, 27.522875], [40.959631666666674, 27.52248], [40.959995000000006, 27.522001666666664], [40.96026333333334, 27.521598333333333], [40.96052666666667, 27.521245], [40.96111, 27.520576666666667], [40.96129833333334, 27.52037], [40.96149166666667, 27.520156666666665], [40.96167166666666, 27.519991666666662], [40.9619, 27.519873333333333], [40.96205, 27.51989833333333], [40.96208833333333, 27.519905], [40.96211666666667, 27.519925], [40.96213333333333, 27.51994833333333], [40.96214333333333, 27.519996666666668], [40.96215166666666, 27.52002666666667], [40.962148333333325, 27.52005], [40.962146666666655, 27.520131666666668], [40.96213166666666, 27.520195], [40.9621, 27.52029], [40.96214333333333, 27.520291666666665], [40.96213333333333, 27.520325], [40.962148333333325, 27.52040333333333], [40.96213, 27.52048166666667], [40.962118333333336, 27.520506666666662], [40.96208833333333, 27.520566666666664], [40.96207666666666, 27.520658333333333], [40.96202166666667, 27.520748333333334], [40.96191833333333, 27.52091666666667], [40.96189, 27.52100833333333], [40.961845, 27.521103333333333], [40.96181666666666, 27.52117], [40.9618, 27.5212], [40.96179333333334, 27.52121333333333], [40.96174833333334, 27.521261666666664], [40.96172, 27.52126666666667], [40.9617, 27.521291666666663], [40.961683333333326, 27.521291666666663], [40.961678333333325, 27.5213], [40.96167166666666, 27.521321666666665], [40.96163, 27.521345], [40.961641666666665, 27.52138], [40.96167166666666, 27.52148833333333], [40.96164, 27.521585], [40.96166, 27.52161333333333], [40.96165333333333, 27.52160333333333], [40.96163, 27.521615], [40.96160166666667, 27.52161166666667], [40.961580000000005, 27.52159], [40.96163666666666, 27.52151], [40.96167166666666, 27.521461666666667], [40.9617, 27.521411666666665], [40.961935, 27.52127], [40.96208, 27.521185], [40.962283333333325, 27.521135], [40.96237666666666, 27.52104333333333], [40.96236666666666, 27.52096], [40.96262166666667, 27.520821666666667], [40.96264666666666, 27.520766666666667], [40.96269, 27.52072666666667], [40.962735, 27.52065], [40.962786666666666, 27.520611666666664], [40.962815, 27.520588333333333], [40.962888333333325, 27.520545], [40.962933333333325, 27.520496666666663], [40.962961666666665, 27.52045], [40.962978333333325, 27.52043], [40.963003333333326, 27.5204], [40.963003333333326, 27.52034], [40.963033333333335, 27.520285], [40.963048333333326, 27.52022], [40.96306666666667, 27.520135], [40.963078333333335, 27.519863333333333], [40.963093333333326, 27.519536666666667], [40.963183333333326, 27.519105000000003], [40.963206666666665, 27.518906666666663], [40.96325, 27.518645], [40.963303333333336, 27.518161666666668], [40.96333166666666, 27.517908333333327], [40.96342166666666, 27.51772], [40.96344166666666, 27.517535], [40.963473333333326, 27.517331666666667], [40.96353, 27.51714], [40.96352666666667, 27.516963333333333], [40.963538333333325, 27.51672333333333], [40.963550000000005, 27.51646833333333], [40.96359, 27.516245], [40.96364166666666, 27.515968333333333], [40.96368833333334, 27.515723333333334], [40.96373666666666, 27.51545666666667], [40.963765, 27.51519833333333], [40.963755, 27.514966666666663], [40.963836666666666, 27.514725], [40.96387, 27.514445], [40.96391333333334, 27.514225], [40.96391166666666, 27.513981666666663], [40.96401, 27.513783333333333], [40.964036666666665, 27.513645]],
+                {"bubblingMouseEvents": true, "color": "#2563eb", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "#2563eb", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.9, "smoothFactor": 1.0, "stroke": true, "weight": 4.5}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            poly_line_47e8acd2ac882a5addbeb1f1bb7c5cac.bindTooltip(
+                `<div>
+                     MMSI 257113350 - SEGMENT 1 (PORT_TO_PORT)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var marker_ede82cd75c73cd7c84e93214f03dd5b9 = L.marker(
+                [40.72534, 29.88243],
+                {
+}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            var icon_c265f67a82bdc92738413e6906f03b63 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "play",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+            marker_ede82cd75c73cd7c84e93214f03dd5b9.bindTooltip(
+                `<div>
+                     BAŞLANGIÇ (MMSI 257113350 - Segment 1)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_ede82cd75c73cd7c84e93214f03dd5b9.setIcon(icon_c265f67a82bdc92738413e6906f03b63);
+            
+    
+            var marker_28757b1370f2885fd2d0a58cc31c2c7e = L.marker(
+                [40.964036666666665, 27.513645],
+                {
+}
+            ).addTo(map_b87d6fa7d4b76c713cde79b066c0ae2b);
+        
+    
+            var icon_01c77995e40d2f37451b8324da6b31f8 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "stop",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+            marker_28757b1370f2885fd2d0a58cc31c2c7e.bindTooltip(
+                `<div>
+                     BİTİŞ (MMSI 257113350 - Segment 1)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_28757b1370f2885fd2d0a58cc31c2c7e.setIcon(icon_01c77995e40d2f37451b8324da6b31f8);
+            
+</script>
+</html>

@@ -1,0 +1,27 @@
+{
+  "projeksiyon": "AEQD_Marmara_lat0_40.75_lon0_28.50",
+  "parametreler": {
+    "port_radius_m": 500.0,
+    "min_port_stop_min": 5.0,
+    "min_anchor_stop_min": 30.0,
+    "min_voyage_duration_min": 10.0,
+    "max_time_gap_min": 12.0,
+    "stop_speed_knots": 0.5
+  },
+  "toplam_temiz_nokta": 10648309,
+  "segment_ici_seyir_noktasi": 4914672,
+  "liman_durusu_noktasi": 612813,
+  "demirleme_noktasi": 4994071,
+  "toplam_gecerli_segment": 44714,
+  "benzersiz_gemi_sayisi": 2584,
+  "kategori_dagilimi": {
+    "TRANSIT_OR_PARTIAL": 35171,
+    "ANCHOR_TO_ANCHOR": 5425,
+    "PORT_DEPARTURE": 1465,
+    "PORT_ARRIVAL": 1189,
+    "PORT_ROUNDTRIP": 639,
+    "ANCHOR_TO_PORT": 374,
+    "PORT_TO_ANCHOR": 350,
+    "PORT_TO_PORT": 101
+  }
+}

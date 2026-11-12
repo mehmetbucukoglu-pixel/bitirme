@@ -1,0 +1,24 @@
+{
+  "toplam_ham_satir": 13968687,
+  "gecersiz_mmsi_zaman_koordinat": 0,
+  "marmara_disi_elenen": 0,
+  "tam_tekrar_elenen": 2212461,
+  "marmara_ici_analiz_edilen": 11756226,
+  "haversine_ile_tamamlanan_hiz": 42721,
+  "anomali_sayilari": {
+    "zaman_cakismasi_ta_eq_tb": 22521,
+    "tekil_gps_sicramasi_abc": 4692,
+    "mutlak_hiz_veya_mesafe_asimi_50kn": 21433,
+    "yanal_ivme_ve_donus_asimi": 501228,
+    "cizgisel_ivme_asimi": 462,
+    "alpha_method_sapmasi": 553382,
+    "tamamlanamayan_eksik_hiz": 39276
+  },
+  "alpha_esikleri_knot": {
+    "alpha": 0.05,
+    "q_lower_2_5pct": -1.0364,
+    "q_upper_97_5pct": 1.3496
+  },
+  "toplam_supheli_elenen": 1107842,
+  "nihai_temiz_satir": 10648384
+}

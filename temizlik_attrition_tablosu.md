@@ -1,0 +1,19 @@
+# AIS Kürasyon ve Veri Temizleme Adım Adım Attrition Tablosu
+
+**Girdi Dosyası:** `marmara_columns_extracted.csv` (13,968,687 Satır)  
+**Nihai Temiz Satır:** `10,648,309` (%76.23)  
+
+| Adım                            | Kural / Filtre                                                     |   Elenen Satır | Kalan Satır   |   Adım Kaybı (%) | Kümülatif Kayıp (%)   | Açıklama                                                                           |
+|:--------------------------------|:-------------------------------------------------------------------|---------------:|:--------------|-----------------:|:----------------------|:-----------------------------------------------------------------------------------|
+| 1. Format & Geçerlilik          | 9 Haneli MMSI, Geçerli Timestamp ve [-90,90],[-180,180] Koordinat  |              0 | 13968687      |           0      | 0.0                   | Metinsel/bozuk kimlik, geçersiz tarih ve yerküre dışı GPS noktaları elendi.        |
+| 2. Marmara Sınır Kutusu         | IHO Marmara Dikdörtgeni (39.9989°-41.2329° N, 26.1742°-29.9422° E) |              0 | 13968687      |           0      | 0.0                   | Marmara Denizi ve Boğazlar dışındaki çalışma alanı harici kayıtlar çıkarıldı.      |
+| 3. Tam Kopya (Duplicate)        | Birebir Aynı MMSI, Timestamp, Konum ve SOG Bilgisi                 |        2212461 | 11756226      |          15.8387 | 15.8387               | Tekrarlanan ham istasyon paketlerinin ilk kopyası korundu, mükerrerler temizlendi. |
+| 4. Zamansal Çakışma             | Ta == Tb (Delta t == 0, Farklı Konum/Hız)                          |          22521 | -             |           0.1612 | -                     | Aynı saniyede çift sinyal gönderen çelişkili kayıtlar.                             |
+| 5. Tekil GPS Sıçraması          | A->B->C Köprü Testi (2D Düzlem Öklid)                              |           4693 | -             |           0.0336 | -                     | Yalnızca ortadaki hatalı B noktası ayıklandı, C korundu.                           |
+| 6. Fiziksel Hız / Mesafe Sınırı | V_max > 50 knot veya Mesafe > V_max * dt + 100m                    |          21437 | -             |           0.1535 | -                     | Fiziksel 50 knot üst sınırını aşan sıçramalar.                                     |
+| 7. Yanal İvme & Dönüş Hızı      | a_lat > 1.0 m/s² veya w_calc > w_max(v)                            |         501228 | -             |           3.5882 | -                     | Geminin dönüş manevrası fiziksel merkezcil kuvvet sınırı.                          |
+| 8. Çizgisel İvme Sınırı         | a_tangential > 1.0 m/s² (~1.94 knot/sn)                            |            462 | -             |           0.0033 | -                     | Motor gücüyle hızlanma/yavaşlama ivme sınırı.                                      |
+| 9. Alpha-Method İstatistiği     | Delta v < -1.02 kn veya > 1.36 kn                                  |         553382 | -             |           3.9616 | -                     | %95 güven aralığının dışındaki sensör-konum uyuşmazlığı.                           |
+| 10. Tamamlanamayan Eksik Hız    | Sensör Hızı Boş/102.3 ve Mesafe Hesabı Uygun Değil                 |          39277 | -             |           0.2812 | -                     | Konumdan hız türetilemeyen eksik hız kayıtları.                                    |
+| ÖZET BİLANÇO: ŞÜPHELİ/ELENEN    | Tüm Kinematik ve İstatistiksel Filtrelerin Birleşimi (OR)          |        1107917 | 10648309      |           7.9314 | 23.7702               | Tekil şüpheli satırların tamamı nihai temiz çıktından çıkarıldı.                   |
+| NİHAİ TEMİZ VERİ                | Doğrulanmış Kinematik ve 2D AEQD Koordinatlı Noktalar              |              0 | 10648309      |           0      | 23.7702               | Modelleme, interpolasyon ve segmentasyona hazır güvenilir veri seti.               |
