@@ -17,7 +17,7 @@ TRANSFORMER_WGS84_TO_AEQD = Transformer.from_crs("EPSG:4326", MARMARA_AEQD_CRS, 
 # WGS84 (boylam, enlem). Uçlardan sonraki değer kapının Marmara'ya göre
 # hangi tarafta olduğunu, son değer Marmara'ya girişte segment başlatmayı belirtir.
 VIRTUAL_GATES = (
-    ("GATE-CANAKKALE", "Çanakkale Boğazı Kapısı", (26.65655, 40.41497), (26.70812, 40.38021), -1, True),
+    ("GATE-CANAKKALE", "Çanakkale Boğazı Kapısı", (26.99651, 40.56754), (27.07985, 40.44217), -1, True),
     ("GATE-ISTANBUL", "İstanbul Boğazı Kapısı", (28.95296, 41.02112), (29.02600, 40.99345), 1, True),
     ("GATE-IZMIT", "İzmit Körfezi Kapısı", (29.50841, 40.78865), (29.51127, 40.71913), 1, False),
 )
