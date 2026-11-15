@@ -11,9 +11,9 @@ import folium
 from importlib.machinery import SourceFileLoader
 
 
-def load_ports(excel_path="Marmara_Final_Liman_Listesi.xlsx"):
+def load_ports(excel_path="Marmara_Liman_Listesi_v2.csv"):
     seg_mod = SourceFileLoader("seg_mod", "03_trajectory_segmentation.py").load_module()
-    return seg_mod.load_marmara_ports(excel_path)
+    return seg_mod.load_marmara_ports(excel_path), seg_mod.VIRTUAL_GATES
 
 
 def add_working_tile_layers(fmap):
@@ -76,53 +76,32 @@ def select_diverse_segments(df_cat, target_count, min_speed=2.5):
 def build_interactive_gallery_html(
     segments_csv="marmara_segmented_trajectories.csv",
     summary_csv="marmara_segment_summary.csv",
-    ports_excel="Marmara_Final_Liman_Listesi.xlsx",
+    ports_excel="Marmara_Liman_Listesi_v2.csv",
     output_html="marmara_segment_galerisi.html",
-    port_radius_m=500.0,
+    port_radius_m=650.0,
 ):
     """
-    Kategori filtreli (Port-to-Port: 30 örnek, Port-to-Anchorage: 20 örnek,
-    Anchor-to-Port: 15 örnek, Transit: 20 örnek) etkileşimli HTML galerisi üretir.
+    Güncel kategorilerle (Port-to-Port, Gate-to-Gate, Port<->Gate, Roundtrip, Partial, Dep/Arr)
+    etkileşimli HTML galerisi üretir.
     """
     print("-> Kategori Filtreli Çoklu Segment Galerisi ('marmara_segment_galerisi.html') hazırlanıyor...")
     summary_df = pd.read_csv(summary_csv)
-    ports_df = load_ports(ports_excel)
+    ports_df, virtual_gates = load_ports(ports_excel)
 
-    # 1. PORT_TO_PORT: 30 örnek
-    p2p_df = select_diverse_segments(
-        summary_df[summary_df["segment_category"] == "PORT_TO_PORT"], target_count=30, min_speed=1.5
-    )
-
-    # 2. PORT_TO_ANCHOR (Limandan Demirlemeye): 20 örnek
-    p2a_df = select_diverse_segments(
-        summary_df[summary_df["segment_category"] == "PORT_TO_ANCHOR"], target_count=20, min_speed=3.0
-    )
-
-    # 3. ANCHOR_TO_PORT (Demirlemeden Limana): 15 örnek
-    a2p_df = select_diverse_segments(
-        summary_df[summary_df["segment_category"] == "ANCHOR_TO_PORT"], target_count=15, min_speed=3.0
-    )
-
-    # 4. TRANSIT_OR_PARTIAL (Transit Seferler): 20 örnek
-    tr_df = select_diverse_segments(
-        summary_df[summary_df["segment_category"] == "TRANSIT_OR_PARTIAL"], target_count=20, min_speed=6.0
-    )
-
-    # 5. PORT_DEPARTURE / PORT_ARRIVAL: 15 örnek
+    p2p_df = select_diverse_segments(summary_df[summary_df["segment_category"] == "PORT_TO_PORT"], 25, 1.5)
+    g2g_df = select_diverse_segments(summary_df[summary_df["segment_category"] == "GATE_TO_GATE"], 15, 3.0)
+    pg_df = select_diverse_segments(summary_df[summary_df["segment_category"].isin(["PORT_TO_GATE", "GATE_TO_PORT"])], 20, 3.0)
+    rt_df = select_diverse_segments(summary_df[summary_df["segment_category"] == "PORT_ROUNDTRIP"], 15, 2.0)
+    tr_df = select_diverse_segments(summary_df[summary_df["segment_category"] == "PARTIAL"], 15, 4.0)
     dep_arr_df = select_diverse_segments(
-        summary_df[summary_df["segment_category"].isin(["PORT_DEPARTURE", "PORT_ARRIVAL"])],
-        target_count=15,
-        min_speed=4.0,
+        summary_df[summary_df["segment_category"].isin(["PORT_DEPARTURE", "PORT_ARRIVAL", "GATE_DEPARTURE", "GATE_ARRIVAL"])],
+        10, 4.0,
     )
 
-    selected_df = pd.concat([p2p_df, p2a_df, a2p_df, tr_df, dep_arr_df], ignore_index=True)
+    selected_df = pd.concat([p2p_df, g2g_df, pg_df, rt_df, tr_df, dep_arr_df], ignore_index=True)
     selected_df = selected_df.drop_duplicates(subset=["global_segment_id"]).reset_index(drop=True)
 
-    print(f"   • PORT_TO_PORT seçilen        : {len(p2p_df)} örnek")
-    print(f"   • PORT_TO_ANCHOR seçilen      : {len(p2a_df)} örnek")
-    print(f"   • ANCHOR_TO_PORT seçilen      : {len(a2p_df)} örnek")
-    print(f"   • TRANSIT_OR_PARTIAL seçilen  : {len(tr_df)} örnek")
-    print(f"   • PORT_DEPARTURE/ARRIVAL      : {len(dep_arr_df)} örnek")
+    print(f"   • PORT_TO_PORT: {len(p2p_df)} | GATE_TO_GATE: {len(g2g_df)} | PORT<->GATE: {len(pg_df)} | ROUNDTRIP: {len(rt_df)} | PARTIAL: {len(tr_df)} | DEP/ARR: {len(dep_arr_df)}")
     print(f"   • TOPLAM GALERİ SEGMENT SAYISI: {len(selected_df)} örnek")
 
     target_mmsis = set(selected_df["mmsi"].astype(int).unique())
@@ -149,8 +128,12 @@ def build_interactive_gallery_html(
             "name": str(p["port_name"]),
             "lat": round(float(p["lat"]), 6),
             "lon": round(float(p["lon"]), 6),
-            "scope": str(p["scope"]),
+            "radius_m": float(p.get("radius_m", port_radius_m)),
         })
+    gates_json = [
+        {"code": code, "name": name, "coords": [[a[1], a[0]], [b[1], b[0]]]}
+        for code, name, a, b, *_ in virtual_gates
+    ]
 
     # Seçilen her segment için JSON verisi hazırla
     segments_json = []
@@ -218,6 +201,7 @@ def build_interactive_gallery_html(
             "point_count": int(r["point_count"]),
             "mean_speed": float(r["mean_speed_kn"]),
             "max_speed": float(r["max_speed_kn"]),
+            "anchorage_wait_min": float(r.get("anchorage_wait_min", 0.0)),
             "points": points_list,
             "other_segments": other_segs,
         })
@@ -254,9 +238,10 @@ def build_interactive_gallery_html(
   .top-status {{ display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }}
   .badge {{ display: inline-block; padding: 4px 9px; border-radius: 4px; font-size: 11px; font-weight: 700; letter-spacing: 0.4px; }}
   .badge.PORT_TO_PORT {{ background: #16a34a; color: white; }}
-  .badge.PORT_ARRIVAL, .badge.PORT_DEPARTURE {{ background: #0284c7; color: white; }}
-  .badge.ANCHOR_TO_PORT, .badge.PORT_TO_ANCHOR {{ background: #d97706; color: white; }}
-  .badge.TRANSIT_OR_PARTIAL {{ background: #64748b; color: white; }}
+  .badge.GATE_TO_GATE, .badge.PORT_TO_GATE, .badge.GATE_TO_PORT {{ background: #7c3aed; color: white; }}
+  .badge.PORT_ROUNDTRIP {{ background: #d97706; color: white; }}
+  .badge.PORT_ARRIVAL, .badge.PORT_DEPARTURE, .badge.GATE_ARRIVAL, .badge.GATE_DEPARTURE {{ background: #0284c7; color: white; }}
+  .badge.PARTIAL {{ background: #64748b; color: white; }}
   .counter-text {{ font-size: 12px; font-weight: 600; color: #38bdf8; }}
   .card {{ background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 11px 14px; margin-bottom: 10px; }}
   .card-row {{ display: flex; justify-content: space-between; font-size: 12px; padding: 4.5px 0; border-bottom: 1px solid #1e293b; }}
@@ -276,7 +261,7 @@ def build_interactive_gallery_html(
 <div id="sidebar">
   <div class="header">
     <h1>Marmara AIS Segmentasyon Galerisi (100 Örnek)</h1>
-    <p>Liman R=500m | Liman Duruş ≥ 5dk | Demirleme ≥ 30dk | Kopukluk > 30dk</p>
+    <p>43 Liman (Özel R) | 3 Sanal Kapı | Gap Bridge ≤ 60 dk | Demirleme Ara Durak</p>
   </div>
   <div class="nav-controls">
     <div class="filter-label">
@@ -285,11 +270,12 @@ def build_interactive_gallery_html(
     </div>
     <div class="filter-pills">
       <button class="pill active" onclick="setCategoryFilter('ALL', this)">Tümü (100)</button>
-      <button class="pill" onclick="setCategoryFilter('PORT_TO_PORT', this)">Port-to-Port (30)</button>
-      <button class="pill" onclick="setCategoryFilter('PORT_TO_ANCHOR', this)">Port-to-Anchor (20)</button>
-      <button class="pill" onclick="setCategoryFilter('ANCHOR_TO_PORT', this)">Anchor-to-Port (15)</button>
-      <button class="pill" onclick="setCategoryFilter('TRANSIT_OR_PARTIAL', this)">Transit (20)</button>
-      <button class="pill" onclick="setCategoryFilter('PORT_DEP_ARR', this)">Port Giriş/Çıkış (15)</button>
+      <button class="pill" onclick="setCategoryFilter('PORT_TO_PORT', this)">Port-to-Port (25)</button>
+      <button class="pill" onclick="setCategoryFilter('GATE_TO_GATE', this)">Gate-to-Gate (15)</button>
+      <button class="pill" onclick="setCategoryFilter('PORT_GATE', this)">Port↔Gate (20)</button>
+      <button class="pill" onclick="setCategoryFilter('PORT_ROUNDTRIP', this)">Roundtrip (15)</button>
+      <button class="pill" onclick="setCategoryFilter('PARTIAL', this)">Partial (15)</button>
+      <button class="pill" onclick="setCategoryFilter('PORT_DEP_ARR', this)">Giriş/Çıkış (10)</button>
     </div>
     <div class="btn-row">
       <button class="nav-btn secondary" onclick="prevSegment()">◀ Önceki Örnek</button>
@@ -320,13 +306,15 @@ def build_interactive_gallery_html(
       <div class="card-row"><span class="card-label">Seyir Süresi</span><span class="card-val" id="durText">-</span></div>
       <div class="card-row"><span class="card-label">AIS Nokta Sayısı</span><span class="card-val" id="ptsText">-</span></div>
       <div class="card-row"><span class="card-label">Ort. / Maks. Hız</span><span class="card-val" id="spdText">-</span></div>
+      <div class="card-row"><span class="card-label">Demirde Bekleme</span><span class="card-val" id="anchText">-</span></div>
     </div>
     <div style="font-size:11.5px;font-weight:600;color:#cbd5e1;">Hız (SOG) Değişim Grafiği (knot)</div>
     <canvas id="spdChart" width="380" height="125"></canvas>
     <div class="card legend-box" style="margin-top:10px;">
-      <div>🟢 <b>Yeşil Daire (500m):</b> Kalkış Limanı</div>
-      <div>🔴 <b>Kırmızı Daire (500m):</b> Varış Limanı</div>
-      <div>🔵 <b>Mavi Daireler (500m):</b> Diğer 41 Marmara Limanı</div>
+      <div>🟢 <b>Yeşil Daire:</b> Kalkış Limanı</div>
+      <div>🔴 <b>Kırmızı Daire:</b> Varış Limanı</div>
+      <div>🔵 <b>Mavi Daireler:</b> Diğer 43 Marmara Limanı (özel yarıçap)</div>
+      <div>🟣 <b>Mor Çizgiler:</b> 3 Sanal Kapı (Çanakkale, İstanbul, İzmit)</div>
       <div>➖ <b>Kesikli Çizgiler:</b> Geminin Önceki/Sonraki Segmentleri</div>
     </div>
   </div>
@@ -335,6 +323,7 @@ def build_interactive_gallery_html(
 
 <script>
 const PORTS = {json.dumps(ports_json, ensure_ascii=False)};
+const GATES = {json.dumps(gates_json, ensure_ascii=False)};
 const ALL_SEGMENTS = {json.dumps(segments_json, ensure_ascii=False)};
 const PORT_RADIUS_M = {port_radius_m};
 
@@ -376,8 +365,10 @@ function setCategoryFilter(cat, btnEl) {{
 
   if (cat === 'ALL') {{
     filteredSegments = ALL_SEGMENTS.slice();
+  }} else if (cat === 'PORT_GATE') {{
+    filteredSegments = ALL_SEGMENTS.filter(s => s.category === 'PORT_TO_GATE' || s.category === 'GATE_TO_PORT');
   }} else if (cat === 'PORT_DEP_ARR') {{
-    filteredSegments = ALL_SEGMENTS.filter(s => s.category === 'PORT_DEPARTURE' || s.category === 'PORT_ARRIVAL');
+    filteredSegments = ALL_SEGMENTS.filter(s => s.category === 'PORT_DEPARTURE' || s.category === 'PORT_ARRIVAL' || s.category === 'GATE_DEPARTURE' || s.category === 'GATE_ARRIVAL');
   }} else {{
     filteredSegments = ALL_SEGMENTS.filter(s => s.category === cat);
   }}
@@ -462,6 +453,7 @@ function renderCurrentSegment() {{
   document.getElementById('durText').textContent = `${{seg.duration_min.toFixed(1)}} dk (${{(seg.duration_min/60).toFixed(1)}} saat)`;
   document.getElementById('ptsText').textContent = seg.point_count;
   document.getElementById('spdText').textContent = `${{seg.mean_speed}} kn / ${{seg.max_speed}} kn`;
+  document.getElementById('anchText').textContent = seg.anchorage_wait_min > 0 ? `${{seg.anchorage_wait_min.toFixed(1)}} dk` : 'Yok (0 dk)';
 
   drawSpeedChart(seg.points);
 
@@ -482,13 +474,18 @@ function renderCurrentSegment() {{
       color = '#dc2626'; fillOp = 0.45; weight = 3; prefix = 'VARIŞ LİMANI: ';
     }}
 
+    const r_m = p.radius_m || PORT_RADIUS_M;
     L.circle([p.lat, p.lon], {{
-      radius: PORT_RADIUS_M,
+      radius: r_m,
       color: color,
       weight: weight,
       fillColor: color,
       fillOpacity: fillOp
-    }}).bindTooltip(`<b>${{prefix}}${{p.name}}</b> (${{p.code}})<br>Yarıçap: ${{PORT_RADIUS_M}} m`).addTo(portLayerGroup);
+    }}).bindTooltip(`<b>${{prefix}}${{p.name}}</b> (${{p.code}})<br>Yarıçap: ${{r_m}} m`).addTo(portLayerGroup);
+  }});
+  GATES.forEach(g => {{
+    L.polyline(g.coords, {{ color: '#a855f7', weight: 3.5, dashArray: '8, 5' }})
+      .bindTooltip(`<b>${{g.name}}</b> (${{g.code}})`).addTo(portLayerGroup);
   }});
 
   const showOthers = document.getElementById('showAllSegs').checked;
@@ -580,15 +577,15 @@ def visualize_vessel_segment(
     global_segment_id=None,
     segments_csv="marmara_segmented_trajectories.csv",
     summary_csv="marmara_segment_summary.csv",
-    ports_excel="Marmara_Final_Liman_Listesi.xlsx",
-    port_radius_m=500.0,
+    ports_excel="Marmara_Liman_Listesi_v2.csv",
+    port_radius_m=650.0,
 ):
     if not os.path.exists(summary_csv) or not os.path.exists(segments_csv):
         print("HATA: Önce 'python 03_trajectory_segmentation.py' çalıştırılmalıdır.")
         return
 
     summary_df = pd.read_csv(summary_csv)
-    ports_df = load_ports(ports_excel)
+    ports_df, _ = load_ports(ports_excel)
 
     if global_segment_id is not None:
         sel = summary_df[summary_df["global_segment_id"] == global_segment_id]

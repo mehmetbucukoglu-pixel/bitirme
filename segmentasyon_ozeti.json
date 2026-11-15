@@ -1,27 +1,50 @@
 {
   "projeksiyon": "AEQD_Marmara_lat0_40.75_lon0_28.50",
   "parametreler": {
-    "port_radius_m": 500.0,
+    "port_radius_m": "limana_ozel (Marmara_Liman_Listesi_v2.csv)",
     "min_port_stop_min": 5.0,
     "min_anchor_stop_min": 30.0,
     "min_voyage_duration_min": 10.0,
     "max_time_gap_min": 12.0,
-    "stop_speed_knots": 0.5
+    "stop_speed_knots": 0.5,
+    "min_route_voyages": 5
   },
   "toplam_temiz_nokta": 10648309,
-  "segment_ici_seyir_noktasi": 4914672,
-  "liman_durusu_noktasi": 612813,
-  "demirleme_noktasi": 4994071,
-  "toplam_gecerli_segment": 44714,
-  "benzersiz_gemi_sayisi": 2584,
+  "segment_ici_seyir_noktasi": 5716558,
+  "liman_durusu_noktasi": 3092666,
+  "demirleme_noktasi": 3227139,
+  "toplam_gecerli_segment": 18295,
+  "benzersiz_gemi_sayisi": 2304,
   "kategori_dagilimi": {
-    "TRANSIT_OR_PARTIAL": 35171,
-    "ANCHOR_TO_ANCHOR": 5425,
-    "PORT_DEPARTURE": 1465,
-    "PORT_ARRIVAL": 1189,
-    "PORT_ROUNDTRIP": 639,
-    "ANCHOR_TO_PORT": 374,
-    "PORT_TO_ANCHOR": 350,
-    "PORT_TO_PORT": 101
+    "PARTIAL": 8606,
+    "PORT_TO_PORT": 2886,
+    "PORT_ROUNDTRIP": 1745,
+    "PORT_ARRIVAL": 1349,
+    "PORT_DEPARTURE": 1248,
+    "PORT_TO_GATE": 559,
+    "GATE_TO_GATE": 539,
+    "GATE_ARRIVAL": 459,
+    "GATE_DEPARTURE": 455,
+    "GATE_TO_PORT": 449
+  },
+  "sanal_kapi_gecisleri": {
+    "GATE-CANAKKALE": {
+      "marmaradan_kapiya": 138,
+      "kapidan_marmaraya": 241
+    },
+    "GATE-ISTANBUL": {
+      "marmaradan_kapiya": 2151,
+      "kapidan_marmaraya": 2349
+    },
+    "GATE-IZMIT": {
+      "marmaradan_kapiya": 273,
+      "kapidan_marmaraya": 0
+    }
+  },
+  "limanlar_arasi_sefer_sure_kontrolu": {
+    "WITHIN_LIMIT": 3105,
+    "ANCHORAGE": 338,
+    "INSUFFICIENT_REFERENCE": 236,
+    "LONG": 56
   }
 }

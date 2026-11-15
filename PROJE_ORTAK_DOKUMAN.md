@@ -202,3 +202,57 @@ python 04_visualize_segments.py
 
 ### S3: Sinyal kopma eşiğini neden 12 dakika aldık?
 > *"Keyfi bir 30 dakika eşiği seçmek yerine, veri setimizdeki 10.6 milyon ardışık zaman farkının ($\Delta t$) ampirik dağılımını çıkardık. Verinin tam %99'unun 12 dakika içinde geldiğini tespit ettik; bu nedenle 12 dakikayı aşan boşlukları bilimsel olarak sinyal kopukluğu kabul ettik."*
+
+
+---
+
+## 9. Güncel Kararlar ve Metodoloji Değişiklikleri (Kasım 2026)
+
+Bu bölüm, grup çalışması sürecinde alınan yeni mimari kararları ve kod güncellemelerini özetler. Repodaki tüm geliştiriciler ve yapay zeka asistanları aktif parametreler için önce bu bölümü esas almalıdır.
+
+### 9.1. Liman Listesi v2 (41 Liman $\rightarrow$ 27 Liman + Limana Özel Yarıçap)
+- Orijinal `Marmara_Final_Liman_Listesi.xlsx` dosyasına dokunulmamış, fine-tune edilmiş güncel liste **[Marmara_Liman_Listesi_v2.csv](file:///c:/Users/Lenovo/Desktop/BITIRME%20SON/Marmara_Liman_Listesi_v2.csv)** ([06_build_port_list_v2.py](file:///c:/Users/Lenovo/Desktop/BITIRME%20SON/06_build_port_list_v2.py)) olarak oluşturulmuştur.
+- Her limanın kendi **`radius_m`** değeri vardır (500 m – 4000 m arası).
+- İç içe/yakın dairelerde büyük limanın küçüğü yutmaması için en yakın liman seçimi **normalize mesafe (`dist_m / radius_m`)** üzerinden yapılır.
+- **Birleştirilen/Kaldırılan/Eklenen Limanlar:**
+  - Çanakkale kapısı dışında kalanlar (`F001–F003`), İstanbul Boğazı kapısı üstünde kalanlar (`F020–F022`) ve kara üstündeki hatalı noktalar (`F008`, `F035`) kaldırılmıştır.
+  - Yakın terminaller birleştirilmiştir: `F012+F013` (Bandırma), `F016+F017` (Ambarlı), `F024+F025+F026` (Gemlik), `F027+F029` (Pendik–Tuzla), `F031+F032+F033` (Gebze–Dilovası), `F038+F039` (Derince).
+  - İki yeni liman eklenmiştir: **`MRM-F042` (Marmara Adası Kuzey — Saraylar, 1000 m)** ve **`MRM-F043` (Altınova Tersaneler Bölgesi, 2500 m)**.
+
+### 9.2. Sanal Kapılar (Virtual Gates)
+Transit geçişleri ve körfez giriş-çıkışlarını yakalamak için `03_trajectory_segmentation.py` içinde 3 sanal kapı çizgisi tanımlanmıştır:
+- `GATE-CANAKKALE` (Çanakkale Boğazı)
+- `GATE-ISTANBUL` (İstanbul Boğazı)
+- `GATE-IZMIT` (İzmit Körfezi)
+Kapı geçişleri duruş gerektirmez; gemi çizgiyi kestiği an tam zaman damgası ile segment sınırı (`VIRTUAL_GATE`) olarak işaretlenir.
+
+### 9.3. Demirleme (Anchorage) Artık Segment Kesmiyor
+- Demirde bekleme (`ANCHOR_STOP`: liman dışı `SOG <= 0.5 knot` ve $\ge 30\text{ dk}$) **segmenti bölmez**; `ANCHOR_TO_ANCHOR`, `PORT_TO_ANCHOR`, `ANCHOR_TO_PORT` kategorileri kaldırılmıştır.
+- Demirleme bilgisi segmentin içine **öznitelik** olarak yazılır (rota/süre bias'ını modelleyebilmek için):
+  - `anchorage_wait_min`: Segment içindeki toplam demirleme süresi (dakika).
+  - `anchorage_lat`, `anchorage_lon`: Segmentteki demirleme noktalarının ortalama koordinatı (demirleme yoksa `NaN`).
+
+### 9.4. Sinyal Kopukluğu Köprüleme (Gap Bridging)
+12 dakikalık ampirik kopukluk eşiği (`max_time_gap_min = 12.0`) korunmuş, ancak `12–60 dakika` arasındaki fiziksel olarak tutarlı kopuklukların gereksiz yere sefer bölmesini önlemek için köprüleme eklenmiştir:
+- `max_bridge_gap_min = 60.0` (1 saat)
+- `max_bridge_speed_kn = 30.0`
+- Seyir devam etmişse: $|v_{\text{ima}} - \bar{v}_{\text{SOG}}| \le \max(3.0\text{ kn},\; 0.50 \times \bar{v}_{\text{SOG}})$
+- İki uç da duruyorsa ($\text{SOG} \le 0.5\text{ kn}$): yer değiştirme $d \le 500\text{ m}$
+
+### 9.5. Güncel Segment Kategorileri
+`TRANSIT_OR_PARTIAL` kategorisi kaldırılmıştır. Güncel kategoriler:
+- **Tam Uçtan Uca:** `PORT_TO_PORT`, `GATE_TO_GATE`, `PORT_TO_GATE`, `GATE_TO_PORT`, `PORT_ROUNDTRIP`
+- **Tek Uçlu:** `PORT_DEPARTURE`, `PORT_ARRIVAL`, `GATE_DEPARTURE`, `GATE_ARRIVAL`
+- **Diğer (Uçları Bağlanmayan):** `PARTIAL` (büyük çoğunluğu listede olmayan şehir içi vapur/feribot/balıkçı iskeleleri ve veri penceresi sınırındaki seferlerdir).
+
+### 9.6. `PORT_ROUNDTRIP` İç Ayrımı (Doğal Tur vs Sınır Titremesi)
+`PORT_ROUNDTRIP` kategorisindeki seferler aynı limandan çıkıp aynı limana dönen segmentlerdir. Bu segmentlerin hepsi hata değildir; `09_roundtrip_analysis.py` ile üç alt tipe ayrılır:
+- **`SINIR_TITREMESI_VEYA_KISA_CIK_GIR` (~%20):** Liman dairesi dışına $\le 500\text{ m}$ taşmış (`overshoot_m <= 500`) veya süresi $< 20\text{ dk}$ olan sınırda gir-çık hareketleri (modelleme öncesi filtrelenmelidir).
+- **`DOGAL_ORTA_TUR` (~%65):** Daire dışına $> 500\text{ m}$ çıkıp `20–120 dk` süren kılavuz/römorkör/servis/ada turu seferleri.
+- **`UZUN_VEYA_DEMIRLI_DONUS` (~%15):** $> 120\text{ dk}$ süren veya içinde demirleme (`anchorage_wait_min > 0`) barındıran uzun dönüşler.
+
+### 9.7. Son Güncellemeler: Mekansal Demirleme, Min 10 dk Zorunluluğu ve Kinematik Filtreler
+- **Hız + Mekansal Kalış (Swinging/Drifting Anchor):** Yalnızca `SOG <= 0.5 kn` yerine, literatürdeki salınım/sürüklenme davranışı için **`SOG <= 1.5 kn` iken liman dışında $\ge 30\text{ dk}$ boyunca `500 m` salınım yarıçapı içinde kalan bloklar** da `ANCHOR_STOP` olarak işaretlenmektedir.
+- **Min 10 Dakika Kuralı (Kapılar Dahil):** Sanal kapı (`VIRTUAL_GATE`) segmentlerindeki `< 10 dk` baypası kaldırılmış, tüm segmentler için `duration_min >= 10.0` zorunlu hale getirilmiştir. İstanbul Boğazı kapısının bitişiğinde kaldığı için yapay `< 10 dk` geçiş üreten `MRM-F055` (#75) çıkarılarak liman sayısı **42** olarak sabitlenmiştir.
+- **Kinematik Tutarlılık Filtresi:** `detour_ratio > 2.5` (`PORT_ROUNDTRIP` hariç) ve `|mean_speed_kn - effective_speed_kn| > 5.0 kn` olan tutarsız segmentler `03_trajectory_segmentation.py` içinde doğrudan elenmektedir.
+- **Regresyon Stratejisi:** Demirli (`anchorage_wait_min > 0`) ve direkt (`anchorage_wait_min == 0`) segmentler ayrı regresyon modellerinde eğitilecektir.

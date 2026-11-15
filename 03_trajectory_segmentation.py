@@ -308,6 +308,12 @@ def segment_trajectories(
     max_time_gap_min=12.0,        # Ampirik %99 sinyal kopukluk eşiği: 12.0 dakika (veya 30 dk)
     stop_speed_knots=0.5,         # Durma / demirleme hız eşiği: 0.5 knot
     min_route_voyages=5,         # Aynı yöndeki rotada süre eşiği için asgari sefer sayısı
+    # --- Gap bridging (sinyal kopukluğu köprüleme) eşikleri ---
+    max_bridge_gap_min=60.0,      # Köprülenebilecek en uzun kopukluk: 1 saat
+    max_bridge_speed_kn=30.0,     # Kopukluk boyunca ima edilen hız üst sınırı (fiziksel)
+    bridge_speed_tol_kn=3.0,      # İma edilen hız ile SOG ortalaması arasındaki mutlak tolerans
+    bridge_speed_tol_ratio=0.5,   # ... veya göreli tolerans (%50)
+    bridge_stationary_m=500.0,    # İki uç da duruyorsa (SOG<=stop) max yer değiştirme
 ):
     if min_route_voyages < 2:
         raise ValueError("Süre eşiği için rota başına en az 2 sefer gerekir.")
@@ -384,6 +390,22 @@ def segment_trajectories(
 
     is_time_gap = (~same_mmsi) | (dt_sec > max_gap_sec)
 
+    # Gap bridging: 12 dk'yı aşan ama fiziksel olarak tutarlı kopuklukları köprüle.
+    # Kural: aynı gemi, dt <= max_bridge_gap, v_ima <= max_bridge_speed ve
+    #   (a) |v_ima - SOG_ort| <= max(tol_kn, tol_ratio * SOG_ort)  -> seyir devam etmiş
+    #   (b) veya iki uç da duruyor ve yer değiştirme <= bridge_stationary_m -> yerinde beklemiş
+    raw_gap = same_mmsi & (dt_sec > max_gap_sec)
+    gi = np.flatnonzero(raw_gap)
+    gap_dist_m = np.hypot(ship_x[gi] - ship_x[gi - 1], ship_y[gi] - ship_y[gi - 1])
+    v_implied_kn = gap_dist_m / dt_sec[gi] * 1.943844
+    sog_mean = 0.5 * (speed_arr[gi] + speed_arr[gi - 1])
+    moving_ok = np.abs(v_implied_kn - sog_mean) <= np.maximum(bridge_speed_tol_kn, bridge_speed_tol_ratio * sog_mean)
+    still_ok = (speed_arr[gi] <= stop_speed_knots) & (speed_arr[gi - 1] <= stop_speed_knots) & (gap_dist_m <= bridge_stationary_m)
+    bridge_ok = (dt_sec[gi] <= max_bridge_gap_min * 60.0) & (v_implied_kn <= max_bridge_speed_kn) & (moving_ok | still_ok)
+    is_time_gap[gi[bridge_ok]] = False
+    print(f"   Sinyal kopukluğu (> {max_time_gap_min:.0f} dk): {len(gi):,} | köprülenen: {int(bridge_ok.sum()):,} "
+          f"(seyir: {int((bridge_ok & moving_ok).sum()):,}, duruş: {int((bridge_ok & still_ok & ~moving_ok).sum()):,})")
+
     gate_crossings = find_virtual_gate_crossings(ship_x, ship_y, ts_sec, is_time_gap)
     gate_boundary = np.zeros(n, dtype=bool)
     gate_boundary[gate_crossings["idx"].to_numpy(dtype=np.intp)] = True
@@ -447,6 +469,25 @@ def segment_trajectories(
 
     is_port_stop = is_port_dwell | np.isin(slow_run_id, port_stop_runs)
     is_anchor_stop = (~is_port_stop) & np.isin(slow_run_id, anchor_stop_runs)
+
+    # Ek Demirleme Kuralı (Literatür: Swinging / Drifting at Anchor):
+    # SOG <= 1.5 kn iken liman dışında >= 30 dk boyunca 500 m salınım yarıçapı içinde kalan bloklar
+    is_drift = (~in_port_circle) & (~is_port_stop) & (speed_arr <= 1.5)
+    drift_break = is_time_gap | gate_boundary | (is_drift != np.roll(is_drift, 1))
+    drift_break[0] = True
+    drift_run_id = np.cumsum(drift_break)
+    drift_df = pd.DataFrame({"run_id": drift_run_id, "ts": ts_sec, "x": ship_x, "y": ship_y, "ok": is_drift})
+    drift_ok = drift_df[drift_df["ok"]].groupby("run_id", sort=False)
+    drift_dur = drift_ok["ts"].max() - drift_ok["ts"].min()
+    cand_runs = drift_dur.index[drift_dur >= min_anchor_stop_sec]
+    if len(cand_runs) > 0:
+        cand_pts = drift_df[drift_df["run_id"].isin(cand_runs)].copy()
+        med_xy = cand_pts.groupby("run_id", sort=False)[["x", "y"]].transform("median")
+        cand_pts["swing_m"] = np.hypot(cand_pts["x"] - med_xy["x"], cand_pts["y"] - med_xy["y"])
+        max_swing = cand_pts.groupby("run_id", sort=False)["swing_m"].max()
+        valid_drift_runs = max_swing.index[max_swing <= 500.0]
+        is_anchor_stop = is_anchor_stop | ((~is_port_stop) & np.isin(drift_run_id, valid_drift_runs))
+
     is_underway = (~is_port_stop) & (~is_anchor_stop)
 
     # 0 = UNDERWAY (Seyir), 1 = PORT_STOP (Liman Duruşu), 2 = ANCHOR_STOP (Demirleme)
@@ -475,6 +516,13 @@ def segment_trajectories(
     df["nearest_port_dist_m"] = np.round(nearest_port_dist_m, 1)
 
     anchor_dt_sec = np.where(is_anchor_stop & (~is_time_gap), dt_sec, 0.0)
+    anchor_lat = np.where(is_anchor_stop, df["latitude"].to_numpy(dtype=np.float64), np.nan)
+    anchor_lon = np.where(is_anchor_stop, df["longitude"].to_numpy(dtype=np.float64), np.nan)
+
+    same_raw = np.zeros(n, dtype=bool)
+    same_raw[1:] = raw_seg_id[1:] == raw_seg_id[:-1]
+    step_dist_m = np.zeros(n, dtype=np.float64)
+    step_dist_m[1:] = np.where(same_raw[1:], np.hypot(ship_x[1:] - ship_x[:-1], ship_y[1:] - ship_y[:-1]), 0.0)
 
     uw_df = pd.DataFrame({
         "idx": uw_indices,
@@ -487,6 +535,9 @@ def segment_trajectories(
         "in_port": in_port_circle[uw_indices],
         "port_idx": nearest_port_idx[uw_indices],
         "anchor_dt_sec": anchor_dt_sec[uw_indices],
+        "anchor_lat": anchor_lat[uw_indices],
+        "anchor_lon": anchor_lon[uw_indices],
+        "step_dist_m": step_dist_m[uw_indices],
     })
 
     seg_agg = uw_df.groupby("raw_seg_id", sort=False).agg(
@@ -496,6 +547,11 @@ def segment_trajectories(
         point_count=("idx", "count"),
         start_ts=("ts", "min"),
         end_ts=("ts", "max"),
+        x0=("x", "first"),
+        y0=("y", "first"),
+        x1=("x", "last"),
+        y1=("y", "last"),
+        actual_dist_m=("step_dist_m", "sum"),
         mean_speed_kn=("speed", "mean"),
         max_speed_kn=("speed", "max"),
         first_in_port=("in_port", "first"),
@@ -503,6 +559,8 @@ def segment_trajectories(
         first_port_idx=("port_idx", "first"),
         last_port_idx=("port_idx", "last"),
         anchorage_wait_sec=("anchor_dt_sec", "sum"),
+        anchorage_lat=("anchor_lat", "mean"),
+        anchorage_lon=("anchor_lon", "mean"),
     ).reset_index()
 
     arrival_idx = seg_agg["end_idx"] + 1
@@ -513,10 +571,15 @@ def segment_trajectories(
     seg_agg["duration_sec"] = seg_agg["end_ts"] - seg_agg["start_ts"]
     seg_agg["duration_min"] = seg_agg["duration_sec"] / 60.0
     seg_agg["anchorage_wait_min"] = np.round(seg_agg["anchorage_wait_sec"] / 60.0, 2)
+    seg_agg["anchorage_lat"] = seg_agg["anchorage_lat"].round(5)
+    seg_agg["anchorage_lon"] = seg_agg["anchorage_lon"].round(5)
+    seg_agg["straight_dist_m"] = np.hypot(seg_agg["x1"] - seg_agg["x0"], seg_agg["y1"] - seg_agg["y0"])
+    seg_agg["detour_ratio"] = np.where(seg_agg["straight_dist_m"] >= 500.0, seg_agg["actual_dist_m"] / seg_agg["straight_dist_m"], np.nan)
+    seg_agg["effective_speed_kn"] = np.where(seg_agg["duration_sec"] > 0, (seg_agg["actual_dist_m"] / seg_agg["duration_sec"]) * 1.943844, 0.0)
+    seg_agg["speed_diff_kn"] = (seg_agg["mean_speed_kn"] - seg_agg["effective_speed_kn"]).abs()
 
     valid_segs = seg_agg[
         (seg_agg["duration_sec"] >= min_voyage_sec) & (seg_agg["point_count"] >= 3)
-        | ((start_gate_ts.notna() | end_gate_ts.notna()) & (seg_agg["duration_sec"] > 0))
     ].copy().reset_index(drop=True)
 
     start_indices = valid_segs["start_idx"].to_numpy()
@@ -532,11 +595,9 @@ def segment_trajectories(
     next_state = np.where(has_next_same_ship, point_state[next_idx], -1)
 
     origin_is_port = (prev_state == 1) | valid_segs["first_in_port"].to_numpy()
-    origin_is_anchor = (~origin_is_port) & (prev_state == 2)
     origin_port_idx = np.where(prev_state == 1, nearest_port_idx[prev_idx], valid_segs["first_port_idx"].to_numpy())
 
     dest_is_port = (next_state == 1) | valid_segs["last_in_port"].to_numpy()
-    dest_is_anchor = (~dest_is_port) & (next_state == 2)
     dest_port_idx = np.where(next_state == 1, nearest_port_idx[next_idx], valid_segs["last_port_idx"].to_numpy())
 
     origin_gate_code = valid_segs["start_idx"].map(gate_departures["code"])
@@ -545,17 +606,15 @@ def segment_trajectories(
     dest_is_gate = dest_gate_code.notna().to_numpy()
     origin_is_port |= origin_is_gate
     dest_is_port |= dest_is_gate
-    origin_is_anchor &= ~origin_is_gate
-    dest_is_anchor &= ~dest_is_gate
 
     port_codes = ports_df["port_code"].to_numpy()
     port_names = ports_df["port_name"].to_numpy()
 
-    valid_segs["origin_type"] = np.where(origin_is_port, "PORT", np.where(origin_is_anchor, "ANCHORAGE", "GAP_OR_ENTRY"))
+    valid_segs["origin_type"] = np.where(origin_is_port, "PORT", "GAP_OR_ENTRY")
     valid_segs["origin_port_code"] = np.where(origin_is_port, port_codes[origin_port_idx], "")
     valid_segs["origin_port_name"] = np.where(origin_is_port, port_names[origin_port_idx], "")
 
-    valid_segs["dest_type"] = np.where(dest_is_port, "PORT", np.where(dest_is_anchor, "ANCHORAGE", "GAP_OR_EXIT"))
+    valid_segs["dest_type"] = np.where(dest_is_port, "PORT", "GAP_OR_EXIT")
     valid_segs["dest_port_code"] = np.where(dest_is_port, port_codes[dest_port_idx], "")
     valid_segs["dest_port_name"] = np.where(dest_is_port, port_names[dest_port_idx], "")
 
@@ -566,15 +625,34 @@ def segment_trajectories(
     valid_segs.loc[dest_is_gate, "dest_port_code"] = dest_gate_code[dest_is_gate]
     valid_segs.loc[dest_is_gate, "dest_port_name"] = (valid_segs.loc[dest_is_gate, "end_idx"] + 1).map(gate_arrivals["name"])
 
-    seg_category = np.full(len(valid_segs), "TRANSIT_OR_PARTIAL", dtype=object)
-    seg_category[origin_is_port & (~dest_is_port) & (~dest_is_anchor)] = "PORT_DEPARTURE"
-    seg_category[(~origin_is_port) & (~origin_is_anchor) & dest_is_port] = "PORT_ARRIVAL"
-    seg_category[origin_is_port & dest_is_anchor] = "PORT_TO_ANCHOR"
-    seg_category[origin_is_anchor & dest_is_port] = "ANCHOR_TO_PORT"
-    seg_category[origin_is_anchor & dest_is_anchor] = "ANCHOR_TO_ANCHOR"
-    seg_category[origin_is_port & dest_is_port & (valid_segs["origin_port_code"] == valid_segs["dest_port_code"])] = "PORT_ROUNDTRIP"
-    seg_category[origin_is_port & dest_is_port & (valid_segs["origin_port_code"] != valid_segs["dest_port_code"])] = "PORT_TO_PORT"
+    ot = valid_segs["origin_type"].to_numpy()
+    dt = valid_segs["dest_type"].to_numpy()
+    o_port = ot == "PORT"
+    d_port = dt == "PORT"
+    o_gate = ot == "VIRTUAL_GATE"
+    d_gate = dt == "VIRTUAL_GATE"
+    o_gap = ot == "GAP_OR_ENTRY"
+    d_gap = dt == "GAP_OR_EXIT"
+
+    seg_category = np.full(len(valid_segs), "PARTIAL", dtype=object)
+    seg_category[o_port & d_gap] = "PORT_DEPARTURE"
+    seg_category[o_gap & d_port] = "PORT_ARRIVAL"
+    seg_category[o_gate & d_gap] = "GATE_DEPARTURE"
+    seg_category[o_gap & d_gate] = "GATE_ARRIVAL"
+    seg_category[o_port & d_port & (valid_segs["origin_port_code"] == valid_segs["dest_port_code"])] = "PORT_ROUNDTRIP"
+    seg_category[o_port & d_port & (valid_segs["origin_port_code"] != valid_segs["dest_port_code"])] = "PORT_TO_PORT"
+    seg_category[o_gate & d_gate] = "GATE_TO_GATE"
+    seg_category[o_port & d_gate] = "PORT_TO_GATE"
+    seg_category[o_gate & d_port] = "GATE_TO_PORT"
     valid_segs["segment_category"] = seg_category
+
+    # Kinematik tutarlılık filtresi: yüksek detour (>2.5, roundtrip hariç) ve hız uyumsuzluğu (>5 kn) elenir
+    detour_bad = valid_segs["detour_ratio"].notna() & (valid_segs["detour_ratio"] > 2.5) & (valid_segs["segment_category"] != "PORT_ROUNDTRIP")
+    speed_bad = valid_segs["speed_diff_kn"] > 5.0
+    n_before_kin = len(valid_segs)
+    valid_segs = valid_segs[~(detour_bad | speed_bad)].copy().reset_index(drop=True)
+    print(f"   Kinematik tutarlılık filtresi: {n_before_kin:,} -> {len(valid_segs):,} "
+          f"(detour>2.5: {int(detour_bad.sum()):,}, speed_diff>5kn: {int(speed_bad.sum()):,} elendi)")
 
     duration_cols, duration_counts = flag_long_port_voyages(
         valid_segs, ports_df, ts_sec, ship_x, ship_y, nearest_port_idx,
@@ -637,7 +715,7 @@ def segment_trajectories(
         "origin_type", "origin_port_code", "origin_port_name",
         "dest_type", "dest_port_code", "dest_port_name",
         "start_time_utc", "end_time_utc", "duration_min", "point_count",
-        "mean_speed_kn", "max_speed_kn", "anchorage_wait_min",
+        "mean_speed_kn", "max_speed_kn", "anchorage_wait_min", "anchorage_lat", "anchorage_lon",
         *duration_cols,
     ]
     valid_segs[summary_cols].to_csv(output_summary_csv, index=False, encoding="utf-8-sig")
