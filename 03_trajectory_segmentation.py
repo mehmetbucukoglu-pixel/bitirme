@@ -237,19 +237,22 @@ def segment_trajectories(
     print(f"   • Liman Duruşu (Port Stop >= 5dk)    : {int(is_port_stop.sum()):,}")
     print(f"   • Demirde Bekleme (Anchor >= 30dk)   : {int(is_anchor_stop.sum()):,}")
 
-    # 5. Seyir Segmentleri Oluşturma
+    # 5. Seyir Segmentleri Oluşturma (Demirleme segmenti kesmez, ara durak olarak sayılır)
     print("-> [5/6] Seyir segmentleri oluşturuluyor ve kalkış/varış limanları etiketleniyor...")
-    state_change = (point_state != np.roll(point_state, 1))
+    in_port_state = is_port_stop.astype(np.int8)
+    state_change = (in_port_state != np.roll(in_port_state, 1))
     raw_seg_break = is_time_gap | state_change
     raw_seg_break[0] = True
     raw_seg_id = np.cumsum(raw_seg_break)
 
-    uw_mask = point_state == 0
+    uw_mask = ~is_port_stop
     uw_indices = np.where(uw_mask)[0]
 
     df["nearest_port_code"] = ports_df["port_code"].to_numpy()[nearest_port_idx]
     df["nearest_port_name"] = ports_df["port_name"].to_numpy()[nearest_port_idx]
     df["nearest_port_dist_m"] = np.round(nearest_port_dist_m, 1)
+
+    anchor_dt_sec = np.where(is_anchor_stop & (~is_time_gap), dt_sec, 0.0)
 
     uw_df = pd.DataFrame({
         "idx": uw_indices,
@@ -261,6 +264,7 @@ def segment_trajectories(
         "speed": speed_arr[uw_indices],
         "in_port": in_port_circle[uw_indices],
         "port_idx": nearest_port_idx[uw_indices],
+        "anchor_dt_sec": anchor_dt_sec[uw_indices],
     })
 
     seg_agg = uw_df.groupby("raw_seg_id", sort=False).agg(
@@ -276,10 +280,12 @@ def segment_trajectories(
         last_in_port=("in_port", "last"),
         first_port_idx=("port_idx", "first"),
         last_port_idx=("port_idx", "last"),
+        anchorage_wait_sec=("anchor_dt_sec", "sum"),
     ).reset_index()
 
     seg_agg["duration_sec"] = seg_agg["end_ts"] - seg_agg["start_ts"]
     seg_agg["duration_min"] = seg_agg["duration_sec"] / 60.0
+    seg_agg["anchorage_wait_min"] = np.round(seg_agg["anchorage_wait_sec"] / 60.0, 2)
 
     valid_segs = seg_agg[
         (seg_agg["duration_sec"] >= min_voyage_sec) & (seg_agg["point_count"] >= 3)
